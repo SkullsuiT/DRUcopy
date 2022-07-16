@@ -17,12 +17,22 @@ $destination = $usbletter+":"+$env:USERPROFILE.Substring(8)
 # Préparation du fichier de LOG RoboCopy
 $log = "robocopy_$env:UserName.log"
 
-# Création de la varible pour les TreeView
+<# 
+# Création de la variable pour les TreeView (affichage Dossiers et Dossiers cachés)
 $childitem = Get-ChildItem -Path $env:USERPROFILE -attributes d | Select-Object -ExpandProperty fullname
 $hidden_childitem = Get-ChildItem -Path $env:USERPROFILE -attributes h+d | Select-Object -ExpandProperty fullname
 $gci = $childitem + $hidden_childitem
+ #>
 
 # Fonction pour la bar de progression
+
+#Liste des Files et des Directories
+# $cFiles  = [IO.Directory]::GetFiles('C:\')
+$cDirectories = [IO.Directory]::GetDirectories('C:\')
+
+# $userProfileFiles  = [IO.Directory]::GetFiles($env:USERPROFILE)
+$userProfileDirectories = [IO.Directory]::GetDirectories($env:USERPROFILE)
+
 
 # Création de la fenêtre
 $choix_form = New-Object System.Windows.Forms.Form
@@ -31,9 +41,6 @@ $choix_form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::n
 $choix_form.Font = New-Object System.Drawing.Font("Marianne",7,[System.Drawing.FontStyle]::Bold)
 $choix_form.AutoSize = $true
 $choix_form.StartPosition = "CenterScreen"
-
-$AllFiles  = [IO.Directory]::GetFiles('C:\')
-$AllDirectory = [IO.Directory]::GetDirectories('C:\')
 
 $tree = New-Object System.Windows.Forms.TreeView
 $tree.Location = New-Object System.Drawing.Point(10, 10)
@@ -48,16 +55,16 @@ $rootnode = New-Object System.Windows.Forms.TreeNode
 $rootnode.text = "Vos Dossiers"
 $tree.Nodes.Add($rootnode)
 
-$dossiers = Get-ChildItem -Path "$env:HOMEDRIVE\"  -Directory | Select-Object -ExpandProperty fullname
-foreach ($dossier in $dossiers)
+# $dossiers = Get-ChildItem -Path "$env:HOMEDRIVE\"  -attributes d | Select-Object -ExpandProperty fullname
+foreach ($dossier in $cDirectories)
 {
-	if($dossier -eq "$env:HOMEDRIVE\Users")
+	if($dossier -eq "C:\Users")
 	{
 		$subnode = New-Object System.Windows.Forms.TreeNode
 		$subnode.text = $dossier
 
 		$rootnode.Nodes.Add($subnode)
-		$users = $gci
+		$users = $userProfileDirectories
 		foreach ($user in $users)
 		{
 			$userf = New-Object System.Windows.Forms.TreeNode
@@ -144,7 +151,7 @@ $Button_Copie.Add_click({
 		$split=$item.Substring(3)
 		if((Test-Path "$destination\$split") -eq $true)
 		{
-			Start-Job -ScriptBlock{while ((Get-Process -Name "Robocopy") -ne $null){Start-Sleep -Seconds 5}Robocopy.exe $using:item $using:destination\$using:split /tee /DCOPY:DA /COPY:DAT /MIR /E /MT:4 /Z /R:5 /W:2 /log+:$using:destination\$using:log}
+			Start-Job -ScriptBlock{while ((Get-Process -Name "Robocopy") -ne $null){Start-Sleep -Seconds 5}Robocopy.exe $using:item $using:destination\$using:split /tee /XJ /DCOPY:DAT /COPY:DATSOU /MIR /E /MT:4 /Z /R:5 /W:2 /log+:$using:destination\$using:log}
 
 <# 			Start-Sleep -Seconds 5
 			$dest = Get-ChildItem $destination -Recurse -Force | Measure-Object -property length -sum
@@ -154,7 +161,7 @@ $Button_Copie.Add_click({
         else
         {
             New-Item -ItemType "Directory" -Path "$destination\$split" -Force
-			Start-Job -ScriptBlock{while ((Get-Process -Name "Robocopy") -ne $null){Start-Sleep -Seconds 5}Robocopy.exe $using:item\ $using:destination\$using:split\ /tee /DCOPY:DA /COPY:DAT /MIR /E /MT:4 /Z /R:5 /W:2 /log+:$using:destination\$using:log}
+			Start-Job -ScriptBlock{while ((Get-Process -Name "Robocopy") -ne $null){Start-Sleep -Seconds 5}Robocopy.exe $using:item\ $using:destination\$using:split\ /tee /XJ /DCOPY:DAT /COPY:DATSOU /MIR /E /MT:4 /Z /R:5 /W:2 /log+:$using:destination\$using:log}
 		}
 		
 <# 		[System.Windows.MessageBox]::Show($tailletot)
