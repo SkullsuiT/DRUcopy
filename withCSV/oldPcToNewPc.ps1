@@ -3,7 +3,7 @@ $CSV = Import-Csv -Path $location -Encoding 'UTF8' -Delimiter ';'
 
 $log = "robocopy_$env:UserName.log"
 
-$Options = "*.* /tee /XJ /DCOPY:DAT /COPY:DATSOU /eta /MIR /MT:4 /R:5 /W:2 /XO /log+:$env:USERPROFILE\$log"
+$Options = "*.* /tee /XJ /DCOPY:DAT /COPY:DATSOU /eta /MIR /MT:8 /R:5 /W:2 /XO /log+:$env:USERPROFILE\$log"
 
 # Lecture du .CSV
 foreach ($Line in $CSV) {
