@@ -1,7 +1,7 @@
 ## Pour le bon fonctionnement du script :
 
 
-1-	Garder ce .EXE dans le même dossier que le "Transfert.csv";
+1-	Garder l'éxécutable dans le même dossier que le "Transfert.csv";
 
 2-	Lancer l'exécutable "Transfert.exe";
 
@@ -16,8 +16,10 @@
 >- la fenêtre propose de choisir le nombre de copies multithread qui seront effectuées ("8" est sélectionné, 8 copie simultannées seront effectuées MAIS si une est un gros .ISO ... les 7 autres seront finies avant, donc les 8 nouvelles commenceront à la fin du transfert du .ISO);
 >- Une dernière fenêtre vous demandera quelle extension de fichier à exlure;
 
-5-	"STOPTOU" est un bouton effectuant un "Stop-Process -Name powershell -Force", donc attention si un autre est en train de travailler ... ça STOPTOU !!!;
-
+5-	"`STOPTOU`" est un bouton effectuant
+```shell
+Stop-Process -Name "powershell" -Force # Si un autre processus PowerShell est en train de travailler ... ça STOPTOU !!!
+```
 6-	Enjoy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
