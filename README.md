@@ -15,6 +15,7 @@
 >-	"`7-zip`", zip un dossier à l'emplacement voulu.
 
 
+
 4-	Si vous faites "user backup":
 >- la fenêtre propose de choisir le nombre de copies multithread qui seront effectuées ("8" est sélectionné, 8 copie simultannées seront effectuées MAIS si une est un gros .ISO ... les 7 autres seront finies avant, donc les 8 nouvelles commenceront à la fin du transfert du .ISO);
 
