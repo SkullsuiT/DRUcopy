@@ -262,7 +262,7 @@ Function Extract-String {
     # Fin
 
         # Récupération du .CSV pour RoboCpoy
-            $CSV = Import-Csv -Path "$pwd\Transfert.csv" -Encoding 'UTF8' -Delimiter ';'
+            $CSV = Import-Csv -Path "$pwd\Transfert.csv" -Encoding 'UTF8' -Delimiter ','
         # Fin
             $Name = Extract-String -string $SourcePath -character "\" -range Right # Pour le .CSV
         # Lecture du .CSV et début de RoboCopy
