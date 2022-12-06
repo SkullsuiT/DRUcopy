@@ -1,7 +1,7 @@
 ## Pour le bon fonctionnement du script :
 
 
-1-	Garder l'éxécutable dans le même dossier que le "Transfert.csv";
+
 
 2-	Lancer l'exécutable "Transfert.exe";
 
