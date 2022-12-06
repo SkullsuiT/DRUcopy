@@ -1,5 +1,6 @@
 ## Pour le bon fonctionnement du script, procéder comme suit :
 
+
 	1-	Garder ce .EXE dans le même dossier que le "Transfert.csv";
 
 	2-	Lancer l'exécutable "Transfert.exe";
@@ -23,15 +24,18 @@
 
 
 
-Ce script ne fait pas plein de chose, surout ne pas pointer un lien UNC ):
+## Ce script ne fait pas :
+>plein de chose, surout ne pas pointer un lien UNC ):
 
 
-Ce script fait :
+## Ce script fait :
 
+```shell
 /s ; Copie les sous-répertoires. Cette option exclut automatiquement les répertoires vides.
-
+```
+```shell
 /z ; Copie les fichiers en mode redémarré. En mode redémarré, si une copie de fichier doit être interrompue, Robocopy peut reprendre là où il s’est arrêté au lieu de recopier l’intégralité du fichier.
-
+```
 /zb ; Copie les fichiers en mode redémarré. Si l’accès au fichier est refusé, bascule vers le mode de sauvegarde.
 
 /tee ; Écrit la sortie d’état dans la fenêtre de console et dans le fichier journal.
