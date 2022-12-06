@@ -26,7 +26,7 @@ Stop-Process -Name 'powershell' -Force # Si un autre processus PowerShell est en
 
 ## Ce script ne fait pas :
 
-Malhereusement plein de chose, surout ne pas pointer un lien `UNC`.
+Malhereusement plein de chose, surout ne pas pointer un lien [UNC](https://fr.wikipedia.org/wiki/Universal_Naming_Convention).
 
 ## Ce script fait :
 
