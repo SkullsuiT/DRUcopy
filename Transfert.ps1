@@ -261,6 +261,7 @@ Function Extract-String {
         # Fin
     # Fin
 
+    
         # Récupération du .CSV pour RoboCpoy
             $CSV = Import-Csv -Path "$pwd\Transfert.csv" -Encoding 'UTF8' -Delimiter ','
         # Fin
