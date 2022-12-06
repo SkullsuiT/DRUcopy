@@ -20,7 +20,7 @@
 ```powershell
 Stop-Process -Name 'powershell' -Force # Si un autre processus PowerShell est en train de travailler ... ça STOPTOU !!!
 ```
-6-	Enjoy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 
 
