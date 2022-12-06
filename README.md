@@ -25,7 +25,7 @@
 Stop-Process -Name 'powershell' -Force # Si un autre processus PowerShell est en train de travailler ... ça STOPTOU !!!
 ```
 
-6- Pour ajouter une ligne dans le .CSV, faire en sorte que le nom de votre dossier ne comporte pas d'espace. Sinon ajouter `"'`nom de votre dossier`'"`
+6- Pour ajouter une ligne dans le .CSV, faire en sorte que le nom de votre dossier ne comporte pas d'espace. Sinon ajouter `"'`votre chemin`'"`
 
 7-	Enjoy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
