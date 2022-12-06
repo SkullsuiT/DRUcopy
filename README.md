@@ -1,4 +1,3 @@
-# RoboCopy
 Pour le bon fonctionnement du script, procéder comme suit :
 
 	1-	Garder ce .EXE dans le même dossier que le "Transfert.csv";
@@ -21,10 +20,6 @@ Pour le bon fonctionnement du script, procéder comme suit :
 	6-	"STOPTOU" est un bouton effectuant un "Stop-Process -Name powershell -Force", donc attention si un autre est en train de travailler ... ça STOPTOU !!!;
 
 	5-	Enjoy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-    /!\/!\ Warning ... ça bouffe un peu de ressources même en ne choisissant que 8 threads /!\/!\
 
 
 
