@@ -26,13 +26,16 @@ Stop-Process -Name 'powershell' -Force # Si un autre processus PowerShell est en
 
 ## Ce script ne fait pas :
 
-Malhereusement plein de chose, surout ne pas pointer un lien [UNC](https://fr.wikipedia.org/wiki/Universal_Naming_Convention).
+Malhereusement plein de chose, comme ne pas pointer un lien [UNC](https://fr.wikipedia.org/wiki/Universal_Naming_Convention).
 
 ## Ce script fait :
 
 1-	Un `user backup`, pour sauvegarder l'user local en respectant le fichier `Transfert.csv`;
+
 2-	Un `user restore`, pour restaurer un user (ne copie pas le dossier source, seulement son contenue);
+
 3-	Un `copy folder`, simple copie de fichier améliorée par RoboCopy;
+
 4-	Un `7-zip`, zip simplement un dossier vers une source. À terme zippera un utilisateur avec la méthode du `user backup`.
 
 
