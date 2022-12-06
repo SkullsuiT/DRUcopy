@@ -34,7 +34,7 @@ Malhereusement plein de chose, comme ne pas pointer un lien [UNC](https://fr.wik
 
 ## Ce script fait :
 
-1-	Un `user backup`, pour sauvegarder l'user local en respectant le fichier [Transfert.csv]();
+1-	Un `user backup`, pour sauvegarder l'user local en respectant le fichier [Transfert.csv](https://github.com/SkullsuiT/RoboCopy/blob/main/.Transfert.csv);
 
 2-	Un `user restore`, pour restaurer un user (ne copie pas le dossier source, seulement son contenue);
 
