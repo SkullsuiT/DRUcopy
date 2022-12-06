@@ -30,39 +30,38 @@
 
 ## Ce script fait :
 
-```shell
-/s ; Copie les sous-répertoires. Cette option exclut automatiquement les répertoires vides.
-```
-```shell
-/z ; Copie les fichiers en mode redémarré. En mode redémarré, si une copie de fichier doit être interrompue, Robocopy peut reprendre là où il s’est arrêté au lieu de recopier l’intégralité du fichier.
-```
-/zb ; Copie les fichiers en mode redémarré. Si l’accès au fichier est refusé, bascule vers le mode de sauvegarde.
 
-/tee ; Écrit la sortie d’état dans la fenêtre de console et dans le fichier journal.
+`/s` ; Copie les sous-répertoires. Cette option exclut automatiquement les répertoires vides.
 
-/Eta ; Affiche l’heure estimée de l’arrivée (ETA) des fichiers copiés.
+`/z` ; Copie les fichiers en mode redémarré. En mode redémarré, si une copie de fichier doit être interrompue, Robocopy peut reprendre là où il s’est arrêté au lieu de recopier l’intégralité du fichier.
 
-/copyall ; Copie toutes les informations de fichier (Données, Attributs, Horodatages, Liste de contrôle d'accès NTFS (ACL), Informations sur le propriétaire, Information d'audit)
+`/zb` ; Copie les fichiers en mode redémarré. Si l’accès au fichier est refusé, bascule vers le mode de sauvegarde.
 
-/secfix ; Corrige la sécurité des fichiers sur tous les fichiers, même ignorés.
+`/tee` ; Écrit la sortie d’état dans la fenêtre de console et dans le fichier journal.
 
-/timfix ; Corrige les heures de fichier sur tous les fichiers, même ignorés.
+`/Eta` ; Affiche l’heure estimée de l’arrivée (ETA) des fichiers copiés.
 
-/MIR ; Met en miroir une arborescence de répertoires
+`/copyall` ; Copie toutes les informations de fichier (Données, Attributs, Horodatages, Liste de contrôle d'accès NTFS (ACL), Informations sur le propriétaire, Information d'audit)
 
-/MT:8 ; Crée des copies multithread avec n threads.
+`/secfix` ; Corrige la sécurité des fichiers sur tous les fichiers, même ignorés.
 
-/Xf ; Exclu les extensions de fichier.
+`/timfix` ; Corrige les heures de fichier sur tous les fichiers, même ignorés.
 
-/J ; Copies utilisant des E/S non sauvegardées (recommandées pour les fichiers volumineux).
+`/MIR` ; Met en miroir une arborescence de répertoires
 
-/r:5 ; Spécifie le nombre de nouvelles tentatives en cas d’échec de la copie.
+`/MT:8` ; Crée des copies multithread avec n threads.
 
-/w:2 ; Spécifie le délai d’attente entre les tentatives, en secondes.
+`/Xf` ; Exclu les extensions de fichier.
 
-/Xo ; Les fichiers de répertoire source antérieurs à la destination sont exclus de la copie.
+`/J` ; Copies utilisant des E/S non sauvegardées (recommandées pour les fichiers volumineux).
 
-/log ; Écrit la sortie d’état dans le fichier journal (ajoute également la sortie au fichier journal existant dans le %userprofile%).
+`/r:5` ; Spécifie le nombre de nouvelles tentatives en cas d’échec de la copie.
+
+`/w:2` ; Spécifie le délai d’attente entre les tentatives, en secondes.
+
+`/Xo` ; Les fichiers de répertoire source antérieurs à la destination sont exclus de la copie.
+
+`/log` ; Écrit la sortie d’état dans le fichier journal (ajoute également la sortie au fichier journal existant dans le %userprofile%).
 
 
 
