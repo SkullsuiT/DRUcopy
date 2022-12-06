@@ -1,4 +1,4 @@
-Source;Destinatio
+Source;Destination
 $SourcePath\Desktop;$DestinationPath\$Name\Desktop
 $SourcePath\Contacts;$DestinationPath\$Name\Contacts
 $SourcePath\Documents;$DestinationPath\$Name\Documents
