@@ -6,10 +6,10 @@
 2-	Lancer l'exécutable "Transfert.exe";
 
 3-	La première fenêtre propose un choix :
->-	"user backup", est prévu pour sauvegarder un dossier User avec les paramètres défini dans le fichier "Transfert.csv";
->-	"user restore", transferera les FICHIERS d'un dossier (soit l'user est créer et il faudra pointer dedans ! SOIT l'user n'est pas créer, il faut donc créer un dossier avec son nom_old (par exemple));
->-	"copy folder", fait comme "user backup" mais sans les paramètres de "Transfert.csv" (une copie de dossier à MACH12 ^^);
->-	"7-zip", zip un dossier à l'emplacement voulu.
+>-	"`user backup`", est prévu pour sauvegarder un dossier User avec les paramètres défini dans le fichier "Transfert.csv";
+>-	"`user restore`", transferera les FICHIERS d'un dossier (soit l'user est créer et il faudra pointer dedans ! SOIT l'user n'est pas créer, il faut donc créer un dossier avec son nom_old (par exemple));
+>-	"`copy folder`", fait comme "user backup" mais sans les paramètres de "Transfert.csv" (une copie de dossier à MACH12 ^^);
+>-	"`7-zip`", zip un dossier à l'emplacement voulu.
 
 
 4-	Si vous faites "user backup":
