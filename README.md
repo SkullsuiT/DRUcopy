@@ -34,7 +34,7 @@ Malhereusement plein de chose, comme ne pas pointer un lien [UNC](https://fr.wik
 
 2-	Un `user restore`, pour restaurer un user (ne copie pas le dossier source, seulement son contenue);
 
-3-	Un `copy folder`, simple copie de fichier améliorée par [RoboCopy](https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/robocopy);
+3-	Un `copy folder`, simple copie de fichier améliorée par RoboCopy;
 
 4-	Un [7-zip](https://fr.wikipedia.org/wiki/7-Zip), zip simplement un dossier vers une source. À terme zippera un utilisateur avec la méthode du `user backup`.
 
@@ -44,7 +44,7 @@ Malhereusement plein de chose, comme ne pas pointer un lien [UNC](https://fr.wik
 
 `/s` ; Copie les sous-répertoires. Cette option exclut automatiquement les répertoires vides.
 
-`/z` ; Copie les fichiers en mode redémarré. En mode redémarré, si une copie de fichier doit être interrompue, [RoboCopy](https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/robocopy) peut reprendre là où il s’est arrêté au lieu de recopier l’intégralité du fichier.
+`/z` ; Copie les fichiers en mode redémarré. En mode redémarré, si une copie de fichier doit être interrompue, Robocopy peut reprendre là où il s’est arrêté au lieu de recopier l’intégralité du fichier.
 
 `/zb` ; Copie les fichiers en mode redémarré. Si l’accès au fichier est refusé, bascule vers le mode de sauvegarde.
 
@@ -60,7 +60,7 @@ Malhereusement plein de chose, comme ne pas pointer un lien [UNC](https://fr.wik
 
 `/MIR` ; Met en miroir une arborescence de répertoires
 
-`/MT:8` ; Crée des copies multithread avec n threads.
+`/MT:n` ; Crée des copies multithread avec n threads.
 
 `/Xf` ; Exclu les extensions de fichier.
 
