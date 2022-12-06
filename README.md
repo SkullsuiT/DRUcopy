@@ -17,7 +17,7 @@
 >- Une dernière fenêtre vous demandera quelle extension de fichier à exlure;
 
 5-	"`STOPTOU`" est un bouton effectuant
-```shell
+```powershell
 Stop-Process -Name "powershell" -Force # Si un autre processus PowerShell est en train de travailler ... ça STOPTOU !!!
 ```
 6-	Enjoy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
