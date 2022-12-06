@@ -26,7 +26,7 @@
 
 ## Ce script ne fait pas :
 
-plein de chose, surout ne pas pointer un lien UNC ):
+Malhereusement plein de chose, surout ne pas pointer un lien `UNC`.
 
 
 ## Ce script fait :
