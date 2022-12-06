@@ -18,7 +18,7 @@
 
 5-	"`STOPTOU`" est un bouton effectuant
 ```shell
-PS> Stop-Process -Name "powershell" -Force # Si un autre processus PowerShell est en train de travailler ... ça STOPTOU !!!
+Stop-Process -Name "powershell" -Force # Si un autre processus PowerShell est en train de travailler ... ça STOPTOU !!!
 ```
 6-	Enjoy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
