@@ -69,7 +69,7 @@ Malhereusement plein de chose, comme ne pas pointer un lien [UNC](https://fr.wik
 
 `/MT:n` ; Crée des copies multithread avec n threads.
 
-`/Xf` ; Exclu les extensions de fichier.
+`/Xf` ; Exclu les extensions de fichier. ("*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi")
 
 `/J` ; Copies utilisant des E/S non sauvegardées (recommandées pour les fichiers volumineux).
 
