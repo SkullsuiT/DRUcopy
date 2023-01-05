@@ -230,7 +230,7 @@ Function Extract-String {
 #>
 
     # Définition des options RoboCopy
-        $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi" "*.exe"'
+        $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
         $Options = "*.* /s   /tee /Eta   /timfix $MT $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
     # Fin
 
@@ -316,7 +316,7 @@ Function Extract-String {
         }
         # Fin
     # Définition des options RoboCopy
-        $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi" "*.exe"'
+        $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
         $Options = "*.* /s   /tee /Eta   /timfix /MT:8 $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
     # Fin
     # Fin
@@ -363,7 +363,7 @@ Function Extract-String {
             $DestinationPathCOPY = "$DestinationPathCOPY\$Name"
     # Fin
     # Définition des options RoboCopy
-        $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi" "*.exe"'
+        $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
         $Options = "*.* /s   /tee /Eta   /timfix /MT:8 $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
     # Fin
     # Début de RoboCopy
