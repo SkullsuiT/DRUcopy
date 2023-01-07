@@ -1,0 +1,11 @@
+-   les règles du .CSV intégrées;
+
+-   sélectionner automatiquement le dossier de l'user actuel;
+
+-   se réduire en icônes dans la barre des tâches;
+
+-   pop-up de fin de sauvegarde;
+
+-   restauration automatique depuis un dossier cible;
+
+-   vérifier le roaming thunderbird et mozilla ("profiles" & "compatibility")
