@@ -106,6 +106,13 @@ Function Extract-String {
         $listBoxCHX.Height = 90
         $listBoxCHX.SelectionMode = 'MultiExtended'
     # Fin
+    # Création de la ComboBox
+        $comboBox = New-Object System.Windows.Forms.ComboBox
+        $comboBox.Location = New-Object System.Drawing.Point(10,40)
+        $comboBox.Size = New-Object System.Drawing.Size(260,20)
+        $comboBox.Height = 90
+        $comboBox.DropDownStyle = 'DropDownList'
+    # Fin
     # Définition du contenu de la "Listbox"
         [void] $listBoxCHX.Items.Add('user backup')
         [void] $listBoxCHX.Items.Add('user restore')
