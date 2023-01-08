@@ -9,7 +9,6 @@
 
     $radioButtonGroup = New-Object System.Windows.Forms.GroupBox
     $radioButtonGroup.Location = New-Object System.Drawing.Point(10, 40)
-    $radioButtonGroup.Size = New-Object System.Drawing.Size(260, 130)
     $radioButtonGroup.AutoSize = $true
     $radioButtonGroup.AutoSizeMode = [System.Windows.Forms.AutoSizeMode]::GrowAndShrink
     $y = 10
@@ -26,97 +25,54 @@
 # Création du WinForm pour définir l'utilisation du .EXE
     # Dimensionnement de la fenêtre
     $formCHX = New-Object System.Windows.Forms.Form
-    $formCHX.Text = 'Quoi faire ?'
+    $formCHX.Text = 'DRUcopy'
     $labelCHX = New-Object System.Windows.Forms.Label
     $labelCHX.Location = New-Object System.Drawing.Point(10,20)
 
-    $formCHX.AutoSize = $true
+$formCHX.AutoSize = $true
+$formCHX.AutoSizeMode = [System.Windows.Forms.AutoSizeMode]::GrowAndShrink
+
     $formCHX.AutoSizeMode = [System.Windows.Forms.AutoSizeMode]::GrowAndShrink
     
     $formCHX.StartPosition = 'CenterScreen'
     $labelCHX.Text = 'Choisir une option :'
 # Fin
 
-
-
-
-    $formCHX.Controls.Add($layoutPanel)
-    $formCHX.Controls.Add($labelCHX)
-
-    $formCHX.ShowDialog()
-
-
-
-
-
-
-
-
-
-
-
-
-    $OKButton = New-Object System.Windows.Forms.Button
-$OKButton.Size = New-Object System.Drawing.Size(75, 23)
+# Définition du bouton "GO !"
+$OKButton = New-Object System.Windows.Forms.Button
+$OKButton.Size = New-Object System.Drawing.Size(75,23)
 $OKButton.Text = 'GO !'
 $OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-$OKButton.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Bottom
 # Fin
 # Définition du bouton "STOPTOU"
 $CancelButton = New-Object System.Windows.Forms.Button
-$CancelButton.Size = New-Object System.Drawing.Size(75, 23)
+$CancelButton.Size = New-Object System.Drawing.Size(75,23)
 $CancelButton.Text = 'STOPTOU'
 $CancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
 $CancelButton.Add_Click({((Stop-Process -Name powershell -Force));})
-$CancelButton.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Bottom
 # Fin
-
-
-# Création du layout pannel
-
-$layoutPanel = New-Object System.Windows.Forms.FlowLayoutPanel
-$layoutPanel.FlowDirection = [System.Windows.Forms.FlowDirection]::LeftToRight
-$layoutPanel.Dock = [System.Windows.Forms.DockStyle]::Fill
-$layoutPanel.AutoSize = $true
-
-
-
-$OKButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
-
-$CancelButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
-
-# Création du layout pannel
 $layoutPanel = New-Object System.Windows.Forms.FlowLayoutPanel
 $layoutPanel.Dock = [System.Windows.Forms.DockStyle]::Fill
-$layoutPanel.Controls.Add($radioButtonGroup)
-$layoutPanel.Controls.Add($OKButton)
-$layoutPanel.Controls.Add($CancelButton)
 
+$OKButton.Anchor = [System.Windows.Forms.AnchorStyles]::None
+$CancelButton.Anchor = [System.Windows.Forms.AnchorStyles]::None
 
-# Utilisation du bouton "STOPTOU"
-     #>
+# Calculer l'espacement entre le haut de la fenêtre et le haut du premier bouton
+$buttonSpacing = ($formCHX.ClientSize.Height - $OKButton.Height) / 2
 
-    # Création du layout pannel
+# Centrer horizontalement les boutons en utilisant l'espacement calculé
+$OKButton.Left = ($formCHX.ClientSize.Width - $OKButton.Width - $CancelButton.Width - $buttonSpacing) / 2
+$CancelButton.Left = $OKButton.Right + $buttonSpacing
 
-
-
-    <# # Définition du bouton "GO !"
-
-
-$layoutPanel = New-Object System.Windows.Forms.FlowLayoutPanel
-$layoutPanel.FlowDirection = [System.Windows.Forms.FlowDirection]::LeftToRight
-$layoutPanel.Dock = [System.Windows.Forms.DockStyle]::Fill
-$layoutPanel.AutoSize = $true
+# Placer les boutons au niveau du haut de la fenêtre
+$OKButton.Top = $CancelButton.Top = $buttonSpacing
 
 
 
-$OKButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
+$formCHX.Controls.Add($OKButton)
+$formCHX.Controls.Add($CancelButton)
 
-$CancelButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
+$formCHX.Controls.Add($labelCHX)
+$formCHX.Controls.Add($radioButtonGroup)
 
-# Création du layout pannel
-$layoutPanel = New-Object System.Windows.Forms.FlowLayoutPanel
-$layoutPanel.Dock = [System.Windows.Forms.DockStyle]::Fill
-$layoutPanel.Controls.Add($radioButtonGroup)
-<# $layoutPanel.Controls.Add($OKButton)
-$layoutPanel.Controls.Add($CancelButton) #>
+    $formCHX.ShowDialog()
