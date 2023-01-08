@@ -37,8 +37,26 @@
     $labelCHX.Text = 'Choisir une option :'
 # Fin
 
-# Définition du bouton "GO !"
-$OKButton = New-Object System.Windows.Forms.Button
+
+
+
+    $formCHX.Controls.Add($layoutPanel)
+    $formCHX.Controls.Add($labelCHX)
+
+    $formCHX.ShowDialog()
+
+
+
+
+
+
+
+
+
+
+
+
+    $OKButton = New-Object System.Windows.Forms.Button
 $OKButton.Size = New-Object System.Drawing.Size(75, 23)
 $OKButton.Text = 'GO !'
 $OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
@@ -76,7 +94,29 @@ $layoutPanel.Controls.Add($CancelButton)
 
 
 # Utilisation du bouton "STOPTOU"
-    $formCHX.Controls.Add($layoutPanel)
-    $formCHX.Controls.Add($labelCHX)
+     #>
 
-    $formCHX.ShowDialog()
+    # Création du layout pannel
+
+
+
+    <# # Définition du bouton "GO !"
+
+
+$layoutPanel = New-Object System.Windows.Forms.FlowLayoutPanel
+$layoutPanel.FlowDirection = [System.Windows.Forms.FlowDirection]::LeftToRight
+$layoutPanel.Dock = [System.Windows.Forms.DockStyle]::Fill
+$layoutPanel.AutoSize = $true
+
+
+
+$OKButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
+
+$CancelButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
+
+# Création du layout pannel
+$layoutPanel = New-Object System.Windows.Forms.FlowLayoutPanel
+$layoutPanel.Dock = [System.Windows.Forms.DockStyle]::Fill
+$layoutPanel.Controls.Add($radioButtonGroup)
+<# $layoutPanel.Controls.Add($OKButton)
+$layoutPanel.Controls.Add($CancelButton) #>
