@@ -99,13 +99,13 @@ Function Extract-String {
         $labelCHX.Text = 'Choisir une option :'
         $formCHX.Controls.Add($labelCHX)
     # Fin
-<#     # Taille de la "Listbox"
+    # Taille de la "Listbox"
         $listBoxCHX = New-Object System.Windows.Forms.Listbox
         $listBoxCHX.Location = New-Object System.Drawing.Point(10,40)
         $listBoxCHX.Size = New-Object System.Drawing.Size(260,20)
         $listBoxCHX.Height = 90
         $listBoxCHX.SelectionMode = 'MultiExtended'
-    # Fin #>
+    # Fin
     # Création de la ComboBox
         $comboBox = New-Object System.Windows.Forms.ComboBox
         $comboBox.Location = New-Object System.Drawing.Point(10,40)
@@ -113,15 +113,14 @@ Function Extract-String {
         $comboBox.Height = 90
         $comboBox.DropDownStyle = 'DropDownList'
     # Fin
-    # Définition du contenu de la "comboBox"
-        $comboBoxItems = @('user backup', 'user restore', 'copy folder', '7-zip')
-        foreach ($comboBoxItem in $comboBoxItems)
-        {
-            $comboBox.Items.Add($comboBoxItem)
-        }
+    # Définition du contenu de la "Listbox"
+        [void] $listBoxCHX.Items.Add('user backup')
+        [void] $listBoxCHX.Items.Add('user restore')
+        [void] $listBoxCHX.Items.Add('copy folder  ')
+        [void] $listBoxCHX.Items.Add('7-zip         ')
     # Fin
     # Add de la "Listbox" à l'encadré
-        $formCHX.Controls.Add($comboBox)
+        $formCHX.Controls.Add($listBoxCHX)
         $formCHX.Topmost = $true
     # Fin
     # Afficache du WinForm 
