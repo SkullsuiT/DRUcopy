@@ -99,29 +99,21 @@ Function Extract-String {
         $labelCHX.Text = 'Choisir une option :'
         $formCHX.Controls.Add($labelCHX)
     # Fin
-<#     # Taille de la "Listbox"
+    # Taille de la "Listbox"
         $listBoxCHX = New-Object System.Windows.Forms.Listbox
         $listBoxCHX.Location = New-Object System.Drawing.Point(10,40)
         $listBoxCHX.Size = New-Object System.Drawing.Size(260,20)
         $listBoxCHX.Height = 90
         $listBoxCHX.SelectionMode = 'MultiExtended'
-    # Fin #>
-    # Création de la ComboBox
-        $comboBox = New-Object System.Windows.Forms.ComboBox
-        $comboBox.Location = New-Object System.Drawing.Point(10,40)
-        $comboBox.Size = New-Object System.Drawing.Size(260,20)
-        $comboBox.Height = 90
-        $comboBox.DropDownStyle = 'DropDownList'
     # Fin
-    # Définition du contenu de la "comboBox"
-        $comboBoxItems = @('user backup', 'user restore', 'copy folder', '7-zip')
-        foreach ($comboBoxItem in $comboBoxItems)
-        {
-            $comboBox.Items.Add($comboBoxItem)
-        }
+    # Définition du contenu de la "Listbox"
+        [void] $listBoxCHX.Items.Add('user backup')
+        [void] $listBoxCHX.Items.Add('user restore')
+        [void] $listBoxCHX.Items.Add('copy folder  ')
+        [void] $listBoxCHX.Items.Add('7-zip         ')
     # Fin
     # Add de la "Listbox" à l'encadré
-        $formCHX.Controls.Add($comboBox)
+        $formCHX.Controls.Add($listBoxCHX)
         $formCHX.Topmost = $true
     # Fin
     # Afficache du WinForm 
@@ -180,6 +172,62 @@ Function Extract-String {
             $MT = '/MT:'+$listBox.SelectedItem
         # Fin
     # Fin
+<# 
+    # Création du WinForm permettant à robocopy d'exclure des extensions de fichiers /Xf
+        # Dimensionnement de la fenêtre
+            $formXF = New-Object System.Windows.Forms.Form
+            $formXF.Text = 'Quoi faire ?'
+            $formXF.Size = New-Object System.Drawing.Size(300,200)
+            $formXF.StartPosition = 'CenterScreen'
+            $formXF.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+        # Fin
+        # Utilisation du bouton "GO !"
+            $formXF.AcceptButton = $OKButton
+            $formXF.Controls.Add($OKButton)
+        # Fin
+        # Utilisation du bouton "STOPTOU"
+            $formXF.CancelButton = $CancelButton
+            $formXF.Controls.Add($CancelButton)
+        # Fin
+        # Dimensionnement de l'encadré
+            $labelXF = New-Object System.Windows.Forms.Label
+            $labelXF.Location = New-Object System.Drawing.Point(10,20)
+            $labelXF.Size = New-Object System.Drawing.Size(280,20)
+            $labelXF.Text = 'Choisir une option :'
+            $formXF.Controls.Add($labelXF)
+        # Fin
+        # Taille de la "Listbox"
+            $listBoxXF = New-Object System.Windows.Forms.Listbox
+            $listBoxXF.Location = New-Object System.Drawing.Point(10,40)
+            $listBoxXF.Size = New-Object System.Drawing.Size(260,20)
+            $listBoxXF.Height = 90
+            $listBoxXF.SelectionMode = 'MultiExtended'
+        # Fin
+        # Définitio du contenu de la "Listbox"
+            [void] $listBoxXF.Items.Add('Empty')
+            [void] $listBoxXF.Items.Add('*.EXE')
+            [void] $listBoxXF.Items.Add('*.ISO')
+            [void] $listBoxXF.Items.Add('*.TMP')
+        # Fin
+        # Ajout de la "Listbox" à l'encadré
+            $formXF.Controls.Add($listBoxXF)
+            $formXF.Topmost = $true
+        # Fin
+        # Afficache du WinForm 
+            $formXF.ShowDialog()
+        # Fin
+        # Vérification et incrémentation de /Xf
+            if ($formXF.SelectedItem -ne "*EXE", "*.ISO", "*.TMP")
+            {
+                $XF = ""
+            }
+            else
+            {
+                $XF = '/Xf '+$listBoxXF.SelectedItem
+            }
+        # Fin
+    # Fin
+#>
 
     # Définition des options RoboCopy
         $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
@@ -275,6 +323,113 @@ Function Extract-String {
         $cmd = "Robocopy.exe $SourcePathRESTORE $DestinationPathRESTORE $Options"
         Invoke-Expression $cmd
     }
+# Fin
+
+<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
+
+# Option de 'copy folder' sélectionnée
+    if ($listBoxCHX.SelectedItem.Length.Equals(13))
+    {
+    # Définition de la source
+        $RootFolderCopySRC = "DesktopDirectory"
+        $FolderBrowserCopySRC = New-Object System.Windows.Forms.FolderBrowserDialog
+        $FolderBrowserCopySRC.Description = "/!\Choisir un dossier/!\"
+        $FolderBrowserCopySRC.ShowNewFolderButton = $true
+        $FolderBrowserCopySRC.SelectedPath = $RootFolderCopySRC
+        $FolderBrowserCopySRC.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+
+        $SourcePathCOPY = $FolderBrowserCopySRC.SelectedPath
+    # Fin
+    # Définition de la destination
+        $RootFolderCopyDEST = "DesktopDirectory"
+        $FolderBrowserCopyDEST = New-Object System.Windows.Forms.FolderBrowserDialog
+        $FolderBrowserCopyDEST.Description = "/!\ User restore /!\"
+        $FolderBrowserCopyDEST.ShowNewFolderButton = $true
+        $FolderBrowserCopyDEST.SelectedPath = $RootFolderCopyDEST
+        $FolderBrowserCopyDEST.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+        
+        $DestinationPathCOPY = $FolderBrowserCopyDEST.SelectedPath
+    # Fin
+    # Test du bouton "Cancel"
+        if (($SourcePathCOPY -eq "DesktopDirectory") -or ($DestinationPathCOPY -eq "DesktopDirectory"))
+        {
+            Stop-Process -Name powershell -Force
+        }
+    # Fin
+    # Fin
+    # Créer le dossier de destination  
+            $Name = Extract-String -string $SourcePathCOPY -character "\" -range Right
+            New-Item -Path $DestinationPathCOPY -ItemType "directory" -Name $Name
+            $DestinationPathCOPY = "$DestinationPathCOPY\$Name"
+    # Fin
+    # Définition des options RoboCopy
+        $XF = '/Xf "*.mp4" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
+        $Options = "*.* /s   /tee /Eta   /timfix /MT:8 $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
+    # Fin
+    # Début de RoboCopy
+            $cmd = "Robocopy.exe $SourcePathCOPY $DestinationPathCOPY $Options"
+            Invoke-Expression $cmd
+    # Fin
+    }
+# Fin
+
+<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
+
+# Option "7-zip" sélectionnée
+    if ($listBoxCHX.SelectedItem.Length.Equals(14))
+    {
+    # Définition de la Source, de la Destination ainsi que de leur validité
+        # Définition de la source
+        $RootFolder7zSRC = "DesktopDirectory"
+        $FolderBrowser7zSRC = New-Object System.Windows.Forms.FolderBrowserDialog
+        $FolderBrowser7zSRC.Description = "/!\Choisir un dossier/!\"
+        $FolderBrowser7zSRC.ShowNewFolderButton = $true
+        $FolderBrowser7zSRC.SelectedPath = $RootFolder7zSRC
+        $FolderBrowser7zSRC.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+
+        $SourcePath7z = $FolderBrowser7zSRC.SelectedPath
+        # Fin
+        # Définition de la destination
+        $RootFolder7zDEST = "DesktopDirectory"
+        $FolderBrowser7zDEST = New-Object System.Windows.Forms.FolderBrowserDialog
+        $FolderBrowser7zDEST.Description = "/!\Choisir un dossier/!\"
+        $FolderBrowser7zDEST.ShowNewFolderButton = $true
+        $FolderBrowser7zDEST.SelectedPath = $RootFolder7zDEST
+        $FolderBrowser7zDEST.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+        
+        $DestinationPath7z = $FolderBrowser7zDEST.SelectedPath
+        # Fin
+        # Test du bouton "Cancel"
+        if (($SourcePath7z -eq "DesktopDirectory") -or ($DestinationPath7z -eq "DesktopDirectory"))
+        {
+            Stop-Process -Name powershell -Force
+        }
+        # Fin
+    # Fin
+        # Utilisation de 7-zip
+        if (($SourcePath7z -eq "Cancel") -or ($DestinationPath7z -eq "Cancel"))
+        {
+            Stop-Process -Name powershell -Force
+        }
+        $7zipPath = "$env:ProgramFiles\7-Zip\7z.exe"
+
+        if (-not (Test-Path -Path $7zipPath -PathType Leaf))
+        {
+            throw "7 zip file '$7zipPath' introuvable, veuillez l'installer !"
+        }
+        else
+        {
+            $Name = Extract-String -string $SourcePath7z -character "\" -range Right
+            function create-7zip ([String] $aDirectory, [String] $aZipfile)
+            {
+                [string]$pathToZipExe = "$($Env:ProgramFiles)\7-Zip\7z.exe";
+                [Array]$arguments = "a", "-tzip", "$aZipfile", "$aDirectory", "-r", "-mx9", "-mmt";
+                & $pathToZipExe $arguments;
+            }
+            create-7zip $SourcePath7z $DestinationPath7z\$Name.7z
+        }
+    }
+        # Fin
 # Fin
 
 <# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
