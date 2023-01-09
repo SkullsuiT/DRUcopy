@@ -15,12 +15,40 @@
     $TextBoxLocation = New-Object System.Drawing.Size(10,10)
     $TextBoxSize = New-Object System.Drawing.Size(200,20)
 
+
+    function Set-FormTitleText
+    {
+        param(
+            [System.Windows.Forms.Form]$Form,
+            [string]$Text
+        )
+    
+        $Form.Text = $Text
+    
+        # Calculate the size of the text
+        $textSize = $Form.CreateGraphics().MeasureString($Text, $Form.Font)
+    
+        # Calculate the x coordinate for the text
+        $x = ($Form.Width - $textSize.Width) / 2
+    
+        # Get the handle for the form
+        $handle = $Form.Handle
+    
+        # Send a message to the form to update the title bar text
+        [System.Windows.Forms.NativeMethods]::SetWindowText($handle, $Text)
+    
+        # Send a message to the form to update the position of the title bar text
+        [System.Windows.Forms.NativeMethods]::SendMessage($handle, &H0085, $x, 0)
+    }
+    
+    $Form = New-Object System.Windows.Forms.Form
+        
+    Set-FormTitleText -Form $Form -Text "My Form"
+    
+
 # Set form properties
-    $Form.Text = "Ma première interface utilisateur en PowerShell"
 # Increase the size of the form
     $Form.Size = New-Object System.Drawing.Size(400,200)
-# Adjust the font size of the form's text
-    $Form.Font = New-Object System.Drawing.Font("Arial", 11)
 # Set the AutoSize property to true
     $Form.AutoSize = $true
 # Set the maximum size of the form
@@ -28,26 +56,9 @@
 
     $Form.ControlBox = $true
 
-# Override the WndProc method
-$Form.Add_WndProc({
-    param($m)
 
-    # Check for the WM_NCPAINT message
-    if ($m.Msg -eq 0x85) {
-        # Get the size of the text
-        $textSize = $Form.CreateGraphics().MeasureString($Form.Text, $Form.Font)
 
-        # Calculate the x and y coordinates for the text
-        $x = ($Form.Width - $textSize.Width) / 2
-        $y = 0
-
-        # Draw the text on the form
-        $Form.CreateGraphics().DrawString($Form.Text, $Form.Font, [System.Drawing.Brushes]::Black, $x, $y)
-    }
-
-    # Call the base method
-    $Form.WndProc($m)
-})
+    
 
     
 
