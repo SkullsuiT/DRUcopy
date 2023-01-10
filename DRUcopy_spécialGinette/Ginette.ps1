@@ -13,7 +13,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
     $Form                            = New-Object system.Windows.Forms.Form
     $Form.ClientSize                 = New-Object System.Drawing.Point(392,400)
-    $formCHX.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+    $formCHX.Icon                    = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
     $Form.text                       = "DRUcopy"
     $Form.StartPosition              = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $Form.TopMost                    = $true
