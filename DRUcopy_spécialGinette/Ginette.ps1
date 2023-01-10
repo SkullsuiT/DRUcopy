@@ -1,78 +1,59 @@
-# GUI permettant d'utiliser RoboCopy avec PowerShell
-# JFDS_DSIGE-DRU_2022
+Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.Application]::EnableVisualStyles()
 
+# Mise en page
 
-    Add-Type -AssemblyName System.Windows.Forms
-    Add-Type -AssemblyName System.Drawing
-  
-    $radioButtonItems = @('Sauvegarde', 'Restoration')
+$Form                            = New-Object system.Windows.Forms.Form
+$Form.ClientSize                 = New-Object System.Drawing.Point(392,400)
+$Form.text                       = "DRUcopy"
+$Form.StartPosition              = [System.Windows.Forms.FormStartPosition]::CenterScreen
+$Form.TopMost                    = $true
 
-    $radioButtonGroup = New-Object System.Windows.Forms.GroupBox
-    $radioButtonGroup.Location = New-Object System.Drawing.Point(10, 40)
-    $radioButtonGroup.AutoSize = $true
-    $radioButtonGroup.AutoSizeMode = [System.Windows.Forms.AutoSizeMode]::GrowAndShrink
-    $y = 10
-    
-    foreach ($radioButtonItem in $radioButtonItems)
-    {
-    $radioButton = New-Object System.Windows.Forms.RadioButton
-    $radioButton.Text = $radioButtonItem
-    $radioButton.Location = New-Object System.Drawing.Point(10, $y)
-    $radioButtonGroup.Controls.Add($radioButton)
-    $y += 25
-    }
+$Sauvegarde                      = New-Object system.Windows.Forms.RadioButton
+$Sauvegarde.text                 = "Sauvegarde"
+$Sauvegarde.AutoSize             = $true
+$Sauvegarde.width                = 200
+$Sauvegarde.height               = 20
+$Sauvegarde.location             = New-Object System.Drawing.Point(145,108)
+$Sauvegarde.Font                 = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$Sauvegarde.ForeColor            = [System.Drawing.ColorTranslator]::FromHtml("#00c7fc")
 
-# Création du WinForm pour définir l'utilisation du .EXE
-    # Dimensionnement de la fenêtre
-    $formCHX = New-Object System.Windows.Forms.Form
-    $formCHX.Text = 'DRUcopy'
-    $labelCHX = New-Object System.Windows.Forms.Label
-    $labelCHX.Location = New-Object System.Drawing.Point(10,20)
+$RadioButton2                    = New-Object system.Windows.Forms.RadioButton
+$RadioButton2.text               = "Restauration"
+$RadioButton2.AutoSize           = $true
+$RadioButton2.width              = 200
+$RadioButton2.height             = 20
+$RadioButton2.location           = New-Object System.Drawing.Point(145,174)
+$RadioButton2.Font               = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+$RadioButton2.ForeColor          = [System.Drawing.ColorTranslator]::FromHtml("#ff0000")
 
-$formCHX.AutoSize = $true
-$formCHX.AutoSizeMode = [System.Windows.Forms.AutoSizeMode]::GrowAndShrink
+$OK                              = New-Object system.Windows.Forms.Button
+$OK.text                         = "OK !"
+$OK.width                        = 130
+$OK.height                       = 30
+$OK.location                     = New-Object System.Drawing.Point(15,327)
+$OK.Font                         = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 
-    $formCHX.AutoSizeMode = [System.Windows.Forms.AutoSizeMode]::GrowAndShrink
-    
-    $formCHX.StartPosition = 'CenterScreen'
-    $labelCHX.Text = 'Choisir une option :'
-# Fin
+$ProgressBar1                    = New-Object system.Windows.Forms.ProgressBar
+$ProgressBar1.width              = 367
+$ProgressBar1.height             = 23
+$ProgressBar1.location           = New-Object System.Drawing.Point(14,367)
 
-# Définition du bouton "GO !"
-$OKButton = New-Object System.Windows.Forms.Button
-$OKButton.Size = New-Object System.Drawing.Size(75,23)
-$OKButton.Text = 'GO !'
-$OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-# Fin
-# Définition du bouton "STOPTOU"
-$CancelButton = New-Object System.Windows.Forms.Button
-$CancelButton.Size = New-Object System.Drawing.Size(75,23)
-$CancelButton.Text = 'STOPTOU'
-$CancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-$CancelButton.Add_Click({((Stop-Process -Name powershell -Force));})
-# Fin
-$layoutPanel = New-Object System.Windows.Forms.FlowLayoutPanel
-$layoutPanel.Dock = [System.Windows.Forms.DockStyle]::Fill
+$Cancel                          = New-Object system.Windows.Forms.Button
+$Cancel.text                     = "STOPTOU"
+$Cancel.width                    = 130
+$Cancel.height                   = 30
+$Cancel.location                 = New-Object System.Drawing.Point(249,327)
+$Cancel.Font                     = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 
-$OKButton.Anchor = [System.Windows.Forms.AnchorStyles]::None
-$CancelButton.Anchor = [System.Windows.Forms.AnchorStyles]::None
+$Form.controls.AddRange(@($Sauvegarde,$RadioButton2,$OK,$ProgressBar1,$Cancel))
 
-# Calculer l'espacement entre le haut de la fenêtre et le haut du premier bouton
-$buttonSpacing = ($formCHX.ClientSize.Height - $OKButton.Height) / 2
+# Fin mise en page
 
-# Centrer horizontalement les boutons en utilisant l'espacement calculé
-$OKButton.Left = ($formCHX.ClientSize.Width - $OKButton.Width - $CancelButton.Width - $buttonSpacing) / 2
-$CancelButton.Left = $OKButton.Right + $buttonSpacing
-
-# Placer les boutons au niveau du haut de la fenêtre
-$OKButton.Top = $CancelButton.Top = $buttonSpacing
+# Logic 
 
 
 
-$formCHX.Controls.Add($OKButton)
-$formCHX.Controls.Add($CancelButton)
+# Fin Logic
 
-$formCHX.Controls.Add($labelCHX)
-$formCHX.Controls.Add($radioButtonGroup)
-
-    $formCHX.ShowDialog()
+[void]$Form.ShowDialog()
