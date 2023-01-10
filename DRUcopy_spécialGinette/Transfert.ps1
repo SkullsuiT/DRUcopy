@@ -18,6 +18,8 @@
     $log = "robocopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
 # Fin
 
+$stopProcessCommand = "Stop-Process -Name powershell -Force"
+
 # Création de la fonction "Extract-String" (volée sur le web xD) pour la copie d'un dossier en ne récupérant QUE son nom
 Function Extract-String {
     Param(
@@ -56,7 +58,7 @@ Function Extract-String {
 }
 # Fin
 
-# Définition du bouton "GO !"
+# Définition des boutons "GO !" et "STOPTOU"
     $OKButton = New-Object System.Windows.Forms.Button
     $OKButton.Location = New-Object System.Drawing.Point(75,120)
     $OKButton.Size = New-Object System.Drawing.Size(75,23)
@@ -69,7 +71,7 @@ Function Extract-String {
     $CancelButton.Size = New-Object System.Drawing.Size(75,23)
     $CancelButton.Text = 'STOPTOU'
     $CancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-    $CancelButton.Add_Click({((Stop-Process -Name powershell -Force));})
+    $CancelButton.Add_Click({((Invoke-Expression $stopProcessCommand));})
 # Fin
 
 <# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
@@ -99,24 +101,25 @@ Function Extract-String {
         $labelCHX.Text = 'Choisir une option :'
         $formCHX.Controls.Add($labelCHX)
     # Fin
-    # Taille de la "Listbox"
-        $listBoxCHX = New-Object System.Windows.Forms.Listbox
-        $listBoxCHX.Location = New-Object System.Drawing.Point(10,40)
-        $listBoxCHX.Size = New-Object System.Drawing.Size(260,20)
-        $listBoxCHX.Height = 90
-        $listBoxCHX.SelectionMode = 'MultiExtended'
-    # Fin
-    # Définition du contenu de la "Listbox"
-        [void] $listBoxCHX.Items.Add('user backup')
-        [void] $listBoxCHX.Items.Add('user restore')
-        [void] $listBoxCHX.Items.Add('copy folder  ')
-        [void] $listBoxCHX.Items.Add('7-zip         ')
-    # Fin
-    # Add de la "Listbox" à l'encadré
-        $formCHX.Controls.Add($listBoxCHX)
-        $formCHX.Topmost = $true
+    $listBoxCHX = New-Object System.Windows.Forms.Listbox
+
+$listBoxCHX.Location = New-Object System.Drawing.Point(10,40)
+$listBoxCHX.Size = New-Object System.Drawing.Size(260,20)
+$listBoxCHX.Height = 90
+$listBoxCHX.SelectionMode = 'MultiExtended'
+
+$items = @('user backup', 'user restore', 'copy folder', '7-zip')
+
+foreach ($item in $items) {
+    [void] $listBoxCHX.Items.Add($item)
+}
+
+
+
     # Fin
     # Afficache du WinForm 
+    $formCHX.Controls.Add($listBoxCHX)
+    $formCHX.Topmost = $true
         $formCHX.ShowDialog()
     # Fin
 # Fin
@@ -258,7 +261,7 @@ Function Extract-String {
         # Test du bouton "Cancel"
             if (($SourcePath -eq "C:\Users\") -or ($DestinationPath -eq "DesktopDirectory"))
             {
-                Stop-Process -Name powershell -Force
+                Invoke-Expression $stopProcessCommand
             }
         # Fin
     # Fin
@@ -312,7 +315,7 @@ Function Extract-String {
         # Test du bouton "Cancel"
         if (($SourcePathRESTORE -eq "DesktopDirectory") -or ($DestinationPathRESTORE -eq "C:\Users\"))
         {
-            Stop-Process -Name powershell -Force
+            Invoke-Expression $stopProcessCommand
         }
         # Fin
     # Définition des options RoboCopy
@@ -353,7 +356,7 @@ Function Extract-String {
     # Test du bouton "Cancel"
         if (($SourcePathCOPY -eq "DesktopDirectory") -or ($DestinationPathCOPY -eq "DesktopDirectory"))
         {
-            Stop-Process -Name powershell -Force
+            Invoke-Expression $stopProcessCommand
         }
     # Fin
     # Fin
@@ -402,17 +405,16 @@ Function Extract-String {
         # Test du bouton "Cancel"
         if (($SourcePath7z -eq "DesktopDirectory") -or ($DestinationPath7z -eq "DesktopDirectory"))
         {
-            Stop-Process -Name powershell -Force
+            Invoke-Expression $stopProcessCommand
         }
         # Fin
     # Fin
         # Utilisation de 7-zip
+        $7zipPath = "$env:ProgramFiles\7-Zip\7z.exe"
         if (($SourcePath7z -eq "Cancel") -or ($DestinationPath7z -eq "Cancel"))
         {
-            Stop-Process -Name powershell -Force
+            Invoke-Expression $stopProcessCommand
         }
-        $7zipPath = "$env:ProgramFiles\7-Zip\7z.exe"
-
         if (-not (Test-Path -Path $7zipPath -PathType Leaf))
         {
             throw "7 zip file '$7zipPath' introuvable, veuillez l'installer !"
@@ -430,6 +432,7 @@ Function Extract-String {
         }
     }
         # Fin
+
 # Fin
 
 <# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
@@ -438,7 +441,12 @@ Function Extract-String {
 <# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
 <# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
 
-Write-Host 'FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI ! FINI !'
+$finishMessage = "FINI ! "
+$numMessages = 100
+
+for ($i = 0; $i -lt $numMessages; $i++) {
+    Write-Host $finishMessage
+}
 
 pause
 # JFDS_DSIGE-DRU_2022
