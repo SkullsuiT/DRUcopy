@@ -59,7 +59,7 @@ Add-Type -AssemblyName PresentationFramework
     $TextBox                            = New-Object system.Windows.Forms.TextBox
     $TextBox.multiline                  = $true
     $TextBox.UTF8Encoding
-    $TextBox.text = "-> Le bouton 'Sauvegarde' sauvegardera votre profil utilisateur à l'endroit que vous sélectionnerez. Les fichiers vidéos, de musique, et d'installation (*.mp3, *.mp4, *.avi, *.tmp, *.mkv, *.iso et *.msi) ne seront pas conservés !                                                                                                                                                   -> Le bouton 'Restauration' rétablira le profil utilisateur que vous avez sauvegardé depuis l'endroit que vous sélectionnerez."
+    $TextBox.text                       = "-> Le bouton 'Sauvegarde' sauvegardera votre profil utilisateur à l'endroit que vous sélectionnerez. Les fichiers vidéos, de musique, et d'installation (*.mp3, *.mp4, *.avi, *.tmp, *.mkv, *.iso et *.msi) ne seront pas conservés !                                                                                                                                                   -> Le bouton 'Restauration' rétablira le profil utilisateur que vous avez sauvegardé depuis l'endroit que vous sélectionnerez."
     $TextBox.width                      = 343
     $TextBox.height                     = 145
     $TextBox.enabled                    = $false
@@ -129,7 +129,7 @@ Function FunctionMOT {
     if ($Sauvegarde.Checked) {
 
         # Définition de la source
-        $SourcePath = $env:USERPROFILE
+        $SourcePath                          = $env:USERPROFILE
 
         # Définition de la destination
         $RootFolderDestinationPath           = "D:\"
@@ -167,7 +167,7 @@ Function FunctionMOT {
         $SourcePath                          = $SourcePath.SelectedPath
     
         # Définition de la destination
-        $DestinationPath = $env:USERPROFILE
+        $DestinationPath                     = $env:USERPROFILE
 
         # Lancement de la copie
         [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser FireFox ainsi que Thunderbird durant la durée de la copie (15-20min).`r` `r`Merci d'avance. `r`DSIGE-DRU")        
