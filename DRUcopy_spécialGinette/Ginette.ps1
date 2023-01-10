@@ -24,7 +24,7 @@ Add-Type -AssemblyName System.Windows.Forms
     $Sauvegarde.height               = 20
     $Sauvegarde.location             = New-Object System.Drawing.Point(145,41)
     $Sauvegarde.Font                 = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $Sauvegarde.ForeColor            = [System.Drawing.ColorTranslator]::FromHtml("#00c7fc")
+    $Sauvegarde.ForeColor            = [System.Drawing.ColorTranslator]::FromHtml("#318ce7")
 
     # RadioButton2
     $Restauration                    = New-Object system.Windows.Forms.RadioButton
