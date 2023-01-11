@@ -121,11 +121,11 @@ Function FunctionMOT {
 }
 
 # Définition de diverses options et comportement de RoboCopy
-    $boom                                    = Get-Process -Name "firefox","thunderbird" | ForEach-Object {$_.Kill()}
+    #$boom                                    = Get-Process -Name "firefox","thunderbird" | ForEach-Object {$_.Kill()}
     $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
     $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
     $Options                                 = "*.* /s /tee /Eta /timfix /MT:8 $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
-    $cmd                                     = "Robocopy.exe $SourcePath $DestinationPath $Options"
+    $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options"
 
     # Vérification du 'RadioButton' et lancement de la copie
     if ($Sauvegarde.Checked) {
@@ -142,22 +142,49 @@ Function FunctionMOT {
         $DestinationPath.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
         $DestinationPath                     = $DestinationPath.SelectedPath
 
+        # Création du .CSV contenant les informations à sauvegarder
+        $folderNames                         = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
+        $list                                = foreach ($folderName in $folderNames) {
+            [PSCustomObject]@{
+                Source                       = "$SourcePath\$folderName"
+                Destination                  = "$DestinationPath\$folderName"
+            }
+        }
+        $list | Export-Csv -Path "$env:TEMP\temp.csv" -Encoding UTF8 -Delimiter ';' -NoTypeInformation
+        $CSV                                 = Import-Csv -Path "$env:TEMP\temp.csv" -Encoding 'UTF8' -Delimiter ';'
+
         # Vérification de la présence du dossier de destination et lancement de la copie
         $Name                                = FunctionMOT -string $SourcePath -character "\" -range Right
         $DestinationPath                     = $DestinationPath+$Name
         if (-not (Test-Path -Path $DestinationPath -PathType Container)) {
-            New-Item -Path $DestinationPath -ItemType "directory" -Name $Name
+            New-Item -Path $DestinationPath -ItemType "directory"
             $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
             if ($result -eq "OK") {
                 Invoke-Expression $boom
-                Invoke-Expression $cmd
+                foreach ($Line in $CSV) {
+                    $jobs += Start-Job -ScriptBlock {
+                        param($Line, $Options)
+                        $cmd = "Robocopy.exe $($Line.Source) $($Line.Destination) $Options /L"
+                        Invoke-Expression $cmd
+                    } -ArgumentList $Line, $Options
+                }
+                $total = $jobs.Count
+                while ($jobs) {
+                    $pending = $jobs | Where-Object { $_.State -eq 'Running' }
+                    $completed = $jobs.Count - $pending.Count
+                    $percent = [int]($completed / $total * 100)
+                    Write-Progress -Activity "Copying files" -Status "$completed out of $total" -PercentComplete $percent
+                    $jobs = Get-Job -State Running
+                    Start-Sleep -Seconds 1
+                }   
             }
         }
-        elseif (New-Item -Path $DestinationPath -ItemType "directory" -Name $Name) {
+        elseif (New-Item -Path $DestinationPath -ItemType "directory") {
             $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
             if ($result -eq "OK") {
                 Invoke-Expression $boom
-                Invoke-Expression $cmd
+                $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options /L"
+                Invoke-Expression $cmdR
             }
         }
     }
