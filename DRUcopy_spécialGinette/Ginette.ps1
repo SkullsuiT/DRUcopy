@@ -217,4 +217,9 @@ Function FunctionMOT {
         }
     }
 
+    $message = ' FINI !' * 1000
+    Write-Host $message
+    
+    pause
+
 <# Fin Logic #>
