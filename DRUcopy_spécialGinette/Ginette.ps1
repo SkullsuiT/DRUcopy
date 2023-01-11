@@ -2,6 +2,7 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName PresentationFramework
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
+
 <# Mise en page #>
 
 # Convertir une image en Base64 -> [Convert]::ToBase64String((Get-Content "PATH" -Encoding Byte))
@@ -146,14 +147,18 @@ Function FunctionMOT {
         $DestinationPath                     = $DestinationPath+$Name
         if (-not (Test-Path -Path $DestinationPath -PathType Container)) {
             New-Item -Path $DestinationPath -ItemType "directory" -Name $Name
-            [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser FireFox ainsi que Thunderbird durant la durée de la copie (15-20min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-            Invoke-Expression $boom
-            Invoke-Expression $cmd
+            $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+            if ($result -eq "OK") {
+                Invoke-Expression $boom
+                Invoke-Expression $cmd
+            }
         }
         elseif (New-Item -Path $DestinationPath -ItemType "directory" -Name $Name) {
-            [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser FireFox ainsi que Thunderbird durant la durée de la copie (15-20min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-            Invoke-Expression $boom
-            Invoke-Expression $cmd
+            $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+            if ($result -eq "OK") {
+                Invoke-Expression $boom
+                Invoke-Expression $cmd
+            }
         }
     }
     elseif ($Restauration.Checked) {
@@ -171,10 +176,11 @@ Function FunctionMOT {
         $DestinationPath                     = $env:USERPROFILE
 
         # Lancement de la copie
-        [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser FireFox ainsi que Thunderbird durant la durée de la copie (15-20min).`r` `r`Merci d'avance. `r`DSIGE-DRU")        
-        Invoke-Expression $boom
-        Invoke-Expression $cmd
+        $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+        if ($result -eq "OK") {
+            Invoke-Expression $boom
+            Invoke-Expression $cmd
+        }
     }
 
 <# Fin Logic #>
-
