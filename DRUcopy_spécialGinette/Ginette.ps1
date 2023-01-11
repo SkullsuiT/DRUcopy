@@ -124,7 +124,7 @@ Function FunctionMOT {
     #$boom                                    = Get-Process -Name "firefox","thunderbird" | ForEach-Object {$_.Kill()}
     $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
     $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
-    $Options                                 = "*.* /s /tee /Eta /timfix /MT:8 $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
+    $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
     $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options"
 
     # Vérification du 'RadioButton' et lancement de la copie
@@ -160,12 +160,19 @@ Function FunctionMOT {
             New-Item -Path $DestinationPath -ItemType "directory"
             $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
             if ($result -eq "OK") {
-                Invoke-Expression $boom
+#                Invoke-Expression $boom
+                $maxJobs = 1
+                $runningJobs = 0
+                $jobs = @()
                 foreach ($Line in $CSV) {
+                    while ($runningJobs -ge $maxJobs) {
+                        Start-Sleep -Seconds 1
+                        $runningJobs = (Get-Job -State Running).Count
+                    }
+                    $runningJobs++
                     $jobs += Start-Job -ScriptBlock {
                         param($Line, $Options)
-                        $cmd = "Robocopy.exe $($Line.Source) $($Line.Destination) $Options /L"
-                        Invoke-Expression $cmd
+                        Robocopy.exe $($Line.Source) $($Line.Destination) $Options
                     } -ArgumentList $Line, $Options
                 }
                 $total = $jobs.Count
@@ -176,10 +183,10 @@ Function FunctionMOT {
                     Write-Progress -Activity "Copying files" -Status "$completed out of $total" -PercentComplete $percent
                     $jobs = Get-Job -State Running
                     Start-Sleep -Seconds 1
-                }   
-            }
+                }
+            }            
         }
-        elseif (New-Item -Path $DestinationPath -ItemType "directory") {
+        elseif (Test-Path -Path $DestinationPath -PathType Container) {
             $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
             if ($result -eq "OK") {
                 Invoke-Expression $boom
