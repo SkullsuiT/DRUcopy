@@ -59,11 +59,12 @@ Add-Type -AssemblyName PresentationFramework
     $TextBox                            = New-Object system.Windows.Forms.TextBox
     $TextBox.multiline                  = $true
     $TextBox.UTF8Encoding
-    $TextBox.text                       = "-> Le bouton 'Sauvegarde' sauvegardera votre profil utilisateur à l'endroit que vous sélectionnerez. Les fichiers vidéos, de musique, et d'installation (*.mp3, *.mp4, *.avi, *.tmp, *.mkv, *.iso et *.msi) ne seront pas conservés !                                                                                                                                                   -> Le bouton 'Restauration' rétablira le profil utilisateur que vous avez sauvegardé depuis l'endroit que vous sélectionnerez."
-    $TextBox.width                      = 343
+    $TextBox.text = "-> Le bouton 'Sauvegarde' sauvegardera votre profil utilisateur à l'endroit que vous sélectionnerez. Les fichiers vidéos, de musique, et d'installation (*.mp3, *.mp4, *.avi, *.tmp, *.mkv, *.iso et *.msi) ne seront pas conservés !`r`n`r`n -> Le bouton 'Restauration' rétablira le profil utilisateur que vous avez sauvegardé depuis l'endroit que vous sélectionnerez."
+
+    $TextBox.width                      = 350
     $TextBox.height                     = 145
     $TextBox.enabled                    = $false
-    $TextBox.location                   = New-Object System.Drawing.Point(24,200)
+    $TextBox.location                   = New-Object System.Drawing.Point(20,200)
     $TextBox.Font                       = New-Object System.Drawing.Font('Arial',10)
 
     $Form.AcceptButton                  = $OKButton
