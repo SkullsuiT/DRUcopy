@@ -54,7 +54,7 @@ Add-Type -AssemblyName PresentationFramework
     $CancelButton.height                = 30
     $CancelButton.location              = New-Object System.Drawing.Point(249,361)
     $CancelButton.Font                  = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $CancelButton.Add_Click({((Stop-Process -Name powershell -Force));})
+#    $CancelButton.Add_Click({((Stop-Process -Name powershell -Force));})
 
 # TextBox
     $TextBox                            = New-Object system.Windows.Forms.TextBox
@@ -71,6 +71,7 @@ Add-Type -AssemblyName PresentationFramework
     $Form.AcceptButton                  = $OKButton
     $Form.CancelButton                  = $CancelButton
     $Form.controls.AddRange(@($Sauvegarde,$Restauration,$OKButton,$CancelButton,$TextBox))
+    
     [void]$Form.ShowDialog()
 
 <# Fin Mise en page #>
@@ -94,26 +95,26 @@ Function FunctionMOT {
     )
     Process
     {
-        [string]$return = ""
+        [string]$return                  = ""
 
         if ($range -eq "Right")
         {
-            $return = $string.Split("$character")[($string.Length - $string.Replace("$character","").Length)]
+            $return                      = $string.Split("$character")[($string.Length - $string.Replace("$character","").Length)]
         }
         elseif ($range -eq "Left")
         {
-            $return = $string.Split("$character")[0]
+            $return                      = $string.Split("$character")[0]
         }
         elseif ($tonumber -ne 0)
         {
             for ($i = $afternumber; $i -le ($afternumber + $tonumber); $i++)
             {
-                $return += $string.Split("$character")[$i]
+                $return                  += $string.Split("$character")[$i]
             }
         }
         else
         {
-            $return = $string.Split("$character")[$afternumber]
+            $return                      = $string.Split("$character")[$afternumber]
         }
 
         return $return
@@ -124,12 +125,16 @@ Function FunctionMOT {
     #$boom                                    = Get-Process -Name "firefox","thunderbird" | ForEach-Object {$_.Kill()}
     $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
     $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
-    $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
+    $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /L /log+:$env:USERPROFILE\$log"
     $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options"
 
-    # Vérification du 'RadioButton' et lancement de la copie
-    if ($Sauvegarde.Checked) {
+    # Définition des dossiers à copier
+    $folderNames                             = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
 
+
+    # Vérification du 'RadioButton' et lancement de la copie
+    if ($Sauvegarde.Checked)
+    {
         # Définition de la source
         $SourcePath                          = $env:USERPROFILE
 
@@ -143,8 +148,8 @@ Function FunctionMOT {
         $DestinationPath                     = $DestinationPath.SelectedPath
 
         # Création du .CSV contenant les informations à sauvegarder
-        $folderNames                         = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
-        $list                                = foreach ($folderName in $folderNames) {
+        $list                                = foreach ($folderName in $folderNames)
+        {
             [PSCustomObject]@{
                 Source                       = "$SourcePath\$folderName"
                 Destination                  = "$DestinationPath\$folderName"
@@ -156,47 +161,33 @@ Function FunctionMOT {
         # Vérification de la présence du dossier de destination et lancement de la copie
         $Name                                = FunctionMOT -string $SourcePath -character "\" -range Right
         $DestinationPath                     = $DestinationPath+$Name
-        if (-not (Test-Path -Path $DestinationPath -PathType Container)) {
+        if (-not (Test-Path -Path $DestinationPath -PathType Container))
+        {
             New-Item -Path $DestinationPath -ItemType "directory"
             $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-            if ($result -eq "OK") {
+            if ($result -eq "OK")
+            {
 #                Invoke-Expression $boom
-                $maxJobs = 1
-                $runningJobs = 0
-                $jobs = @()
-                foreach ($Line in $CSV) {
-                    while ($runningJobs -ge $maxJobs) {
-                        Start-Sleep -Seconds 1
-                        $runningJobs = (Get-Job -State Running).Count
-                    }
-                    $runningJobs++
-                    $jobs += Start-Job -ScriptBlock {
-                        param($Line, $Options)
-                        Robocopy.exe $($Line.Source) $($Line.Destination) $Options
-                    } -ArgumentList $Line, $Options
-                }
-                $total = $jobs.Count
-                while ($jobs) {
-                    $pending = $jobs | Where-Object { $_.State -eq 'Running' }
-                    $completed = $jobs.Count - $pending.Count
-                    $percent = [int]($completed / $total * 100)
-                    Write-Progress -Activity "Copying files" -Status "$completed out of $total" -PercentComplete $percent
-                    $jobs = Get-Job -State Running
-                    Start-Sleep -Seconds 1
-                }
-            }            
-        }
-        elseif (Test-Path -Path $DestinationPath -PathType Container) {
-            $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-            if ($result -eq "OK") {
-                Invoke-Expression $boom
-                $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options /L"
-                Invoke-Expression $cmdR
+                foreach ($Line in $CSV)
+                {
+                    param($Line, $Options)
+                    Robocopy.exe $($Line.Source) $($Line.Destination) $Options
+                } -ArgumentList $Line, $Options
             }
         }
     }
-    elseif ($Restauration.Checked) {
-
+    elseif (Test-Path -Path $DestinationPath -PathType Container)
+    {
+        $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+        if ($result -eq "OK")
+        {
+            Invoke-Expression $boom
+            $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options /L"
+            Invoke-Expression $cmdR
+        }
+    }
+    elseif ($Restauration.Checked)
+    {
         # Définition de la Source
         $RootFolderSourcePath                = "D:\"
         $SourcePath                          = New-Object System.Windows.Forms.FolderBrowserDialog
@@ -211,7 +202,8 @@ Function FunctionMOT {
 
         # Lancement de la copie
         $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-        if ($result -eq "OK") {
+        if ($result -eq "OK")
+        {
             Invoke-Expression $boom
             Invoke-Expression $cmd
         }
