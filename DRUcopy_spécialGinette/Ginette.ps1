@@ -126,7 +126,6 @@ Function FunctionMOT {
     $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
     $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
     $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /L /log+:$env:USERPROFILE\$log"
-    $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options"
 
     # Définition des dossiers à copier
     $folderNames                             = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
@@ -182,8 +181,8 @@ Function FunctionMOT {
         if ($result -eq "OK")
         {
             Invoke-Expression $boom
-            $cmdR                                    = "Robocopy.exe $SourcePath $DestinationPath $Options /L"
-            Invoke-Expression $cmdR
+            "Robocopy.exe $SourcePath $DestinationPath $Options"
+            [System.Windows.MessageBox]::Show("La restauration s'est correctement déroulée.`r` `r`DSIGE-DRU")
         }
     }
     elseif ($Restauration.Checked)
@@ -201,11 +200,12 @@ Function FunctionMOT {
         $DestinationPath                     = $env:USERPROFILE
 
         # Lancement de la copie
-        $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+        $result                              = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
         if ($result -eq "OK")
         {
             Invoke-Expression $boom
-            Invoke-Expression $cmd
+            "Robocopy.exe $SourcePath $DestinationPath $Options"
+            [System.Windows.MessageBox]::Show("La restauration s'est correctement déroulée.`r` `r`DSIGE-DRU")
         }
     }
 
