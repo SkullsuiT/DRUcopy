@@ -1,3 +1,12 @@
+Bonjour, je souhaiterai créer un script powershell qui sera ensuite compilé en éxécutable.
+Le but premier de ce script et d'utiliser RoboCopy, avec des paramètres que je définirai, pour sauvegarder et restaurer des données.
+
+
+
+Ce script affichera une interface GUI proposant à l'utilisateur deux choix : 'Sauvegarde' et 'Restauration' 
+
+La 'Sauvegarde' choisira en tant que source
+
 -   les règles du .CSV intégrées;
 
 -   sélectionner automatiquement le dossier de l'user actuel;
