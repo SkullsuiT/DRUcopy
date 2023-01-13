@@ -16,6 +16,7 @@ Add-Type -AssemblyName PresentationFramework
     $form.Icon                          = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
     $Form.text                          = "DRUcopy"
     $Form.StartPosition                 = [System.Windows.Forms.FormStartPosition]::CenterScreen
+    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
     $Form.TopMost                       = $true
 
 # RadioButton1
@@ -68,150 +69,18 @@ Add-Type -AssemblyName PresentationFramework
     $TextBox.location                   = New-Object System.Drawing.Point(20,200)
     $TextBox.Font                       = New-Object System.Drawing.Font('Arial',10)
 
+# ProgressBar
+    $ProgressBar = New-Object System.Windows.Forms.ProgressBar
+    $ProgressBar.Maximum = 100
+    $ProgressBar.Minimum = 0
+    $ProgressBar.Step = 1
+    $ProgressBar.Value = 98
+    $ProgressBar.Dock = [System.Windows.Forms.DockStyle]::Top
+
+
+
     $Form.AcceptButton                  = $OKButton
     $Form.CancelButton                  = $CancelButton
-    $Form.controls.AddRange(@($Sauvegarde,$Restauration,$OKButton,$CancelButton,$TextBox))
+    $Form.controls.AddRange(@($Sauvegarde,$Restauration,$OKButton,$CancelButton,$TextBox,$ProgressBar))
     
     [void]$Form.ShowDialog()
-
-<# Fin Mise en page #>
-
-<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
-<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
-<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
-<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
-<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
-
-<# Logic #>
-
-# Création de la fonction "FunctionMOT" (volée sur le web xD) pour la copie d'un dossier en ne récupérant QUE son nom
-Function FunctionMOT {
-    Param(
-        [Parameter(Mandatory=$true)][string]$string
-        , [Parameter(Mandatory=$true)][char]$character
-        , [Parameter(Mandatory=$false)][ValidateSet("Right","Left")][string]$range
-        , [Parameter(Mandatory=$false)][int]$afternumber
-        , [Parameter(Mandatory=$false)][int]$tonumber
-    )
-    Process
-    {
-        [string]$return                  = ""
-
-        if ($range -eq "Right")
-        {
-            $return                      = $string.Split("$character")[($string.Length - $string.Replace("$character","").Length)]
-        }
-        elseif ($range -eq "Left")
-        {
-            $return                      = $string.Split("$character")[0]
-        }
-        elseif ($tonumber -ne 0)
-        {
-            for ($i = $afternumber; $i -le ($afternumber + $tonumber); $i++)
-            {
-                $return                  += $string.Split("$character")[$i]
-            }
-        }
-        else
-        {
-            $return                      = $string.Split("$character")[$afternumber]
-        }
-
-        return $return
-    }
-}
-
-# Définition de diverses options et comportement de RoboCopy
-    #$boom                                    = Get-Process -Name "firefox","thunderbird" | ForEach-Object {$_.Kill()}
-    $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
-    $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
-    $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /L /log+:$env:USERPROFILE\$log"
-
-    # Définition des dossiers à copier
-    $folderNames                             = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
-
-
-    # Vérification du 'RadioButton' et lancement de la copie
-    if ($Sauvegarde.Checked)
-    {
-        # Définition de la source
-        $SourcePath                          = $env:USERPROFILE
-
-        # Définition de la destination
-        $RootFolderDestinationPath           = "D:\"
-        $DestinationPath                     = New-Object System.Windows.Forms.FolderBrowserDialog
-        $DestinationPath.Description         = " /!\ Choisir un dossier de sauvegarde /!\ "
-        $DestinationPath.ShowNewFolderButton = $true
-        $DestinationPath.SelectedPath        = $RootFolderDestinationPath
-        $DestinationPath.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
-        $DestinationPath                     = $DestinationPath.SelectedPath
-
-        # Création du .CSV contenant les informations à sauvegarder
-        $list                                = foreach ($folderName in $folderNames)
-        {
-            [PSCustomObject]@{
-                Source                       = "$SourcePath\$folderName"
-                Destination                  = "$DestinationPath\$folderName"
-            }
-        }
-        $list | Export-Csv -Path "$env:TEMP\temp.csv" -Encoding UTF8 -Delimiter ';' -NoTypeInformation
-        $CSV                                 = Import-Csv -Path "$env:TEMP\temp.csv" -Encoding 'UTF8' -Delimiter ';'
-
-        # Vérification de la présence du dossier de destination et lancement de la copie
-        $Name                                = FunctionMOT -string $SourcePath -character "\" -range Right
-        $DestinationPath                     = $DestinationPath+$Name
-        if (-not (Test-Path -Path $DestinationPath -PathType Container))
-        {
-            New-Item -Path $DestinationPath -ItemType "directory"
-            $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-            if ($result -eq "OK")
-            {
-#                Invoke-Expression $boom
-                foreach ($Line in $CSV)
-                {
-                    param($Line, $Options)
-                    Robocopy.exe $($Line.Source) $($Line.Destination) $Options
-                } -ArgumentList $Line, $Options
-            }
-        }
-    }
-    elseif (Test-Path -Path $DestinationPath -PathType Container)
-    {
-        $result                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-        if ($result -eq "OK")
-        {
-            Invoke-Expression $boom
-            "Robocopy.exe $SourcePath $DestinationPath $Options"
-            [System.Windows.MessageBox]::Show("La restauration s'est correctement déroulée.`r` `r`DSIGE-DRU")
-        }
-    }
-    elseif ($Restauration.Checked)
-    {
-        # Définition de la Source
-        $RootFolderSourcePath                = "D:\"
-        $SourcePath                          = New-Object System.Windows.Forms.FolderBrowserDialog
-        $SourcePath.Description              = "/!\ Choisir la sauvegarde à restaurer /!\"
-        $SourcePath.ShowNewFolderButton      = $true
-        $SourcePath.SelectedPath             = $RootFolderSourcePath
-        $SourcePath.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
-        $SourcePath                          = $SourcePath.SelectedPath
-    
-        # Définition de la destination
-        $DestinationPath                     = $env:USERPROFILE
-
-        # Lancement de la copie
-        $result                              = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-        if ($result -eq "OK")
-        {
-            Invoke-Expression $boom
-            "Robocopy.exe $SourcePath $DestinationPath $Options"
-            [System.Windows.MessageBox]::Show("La restauration s'est correctement déroulée.`r` `r`DSIGE-DRU")
-        }
-    }
-
-    $message = ' FINI !' * 1000
-    Write-Host $message
-    
-    pause
-
-<# Fin Logic #>
