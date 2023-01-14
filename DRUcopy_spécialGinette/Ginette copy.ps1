@@ -122,7 +122,6 @@ Function ChoixNOM {
 }
 
 # Définition de diverses options et comportement de RoboCopy
-    $boom                                    = Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
     $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
     $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
     $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
@@ -158,7 +157,7 @@ Function ChoixNOM {
                 elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
                 {
                     New-Item -Path $DestinationPath -ItemType "directory"
-                    Invoke-Expression $boom
+                    Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
                     Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($Line.Source)", "$($Line.Destination)", $Options -NoNewWindow -Wait
                 }
                     [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
@@ -173,7 +172,7 @@ Function ChoixNOM {
                 }
                 elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
                 {
-                    Invoke-Expression $boom
+                    Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
                     Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($Line.Source)", "$($Line.Destination)", $Options -NoNewWindow -Wait
                     [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
             }
@@ -201,7 +200,7 @@ Function ChoixNOM {
         }
         elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
         {
-            Invoke-Expression $boom
+            Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
             "Robocopy.exe $SourcePath $DestinationPath $Options"
             [System.Windows.MessageBox]::Show("La restauration s'est correctement déroulée.`r` `r`DSIGE-DRU")
         }
