@@ -16,7 +16,9 @@ Add-Type -AssemblyName PresentationFramework
     $form.Icon                          = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
     $Form.text                          = "DRUcopy"
     $Form.StartPosition                 = [System.Windows.Forms.FormStartPosition]::CenterScreen
-    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+    $form.FormBorderStyle               = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+    $form.MaximizeBox                   = $false
+
     $Form.TopMost                       = $true
 
 # RadioButton1
@@ -64,9 +66,9 @@ Add-Type -AssemblyName PresentationFramework
     $TextBox.text = "-> Le bouton 'Sauvegarde' sauvegardera votre profil utilisateur à l'endroit que vous sélectionnerez. Les fichiers vidéos, de musique, et d'installation (*.mp3, *.mp4, *.avi, *.tmp, *.mkv, *.iso et *.msi) ne seront pas conservés !`r`n`r`n -> Le bouton 'Restauration' rétablira le profil utilisateur que vous avez sauvegardé depuis l'endroit que vous sélectionnerez."
 
     $TextBox.width                      = 350
-    $TextBox.height                     = 145
+    $TextBox.height                     = 155
     $TextBox.enabled                    = $false
-    $TextBox.location                   = New-Object System.Drawing.Point(20,200)
+    $TextBox.location                   = New-Object System.Drawing.Point(20,180)
     $TextBox.Font                       = New-Object System.Drawing.Font('Arial',10)
 
 # ProgressBar
