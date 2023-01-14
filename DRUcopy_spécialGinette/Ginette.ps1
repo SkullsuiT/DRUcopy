@@ -70,7 +70,6 @@ Add-Type -AssemblyName PresentationFramework
     $ProgressBar.Maximum = 100
     $ProgressBar.Minimum = 0
     $ProgressBar.Step = 1
-    $ProgressBar.Value = 98
     $ProgressBar.Dock = [System.Windows.Forms.DockStyle]::Top
 
     $Form.AcceptButton                  = $OKButton
