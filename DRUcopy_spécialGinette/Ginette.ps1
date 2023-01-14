@@ -73,8 +73,6 @@ Add-Type -AssemblyName PresentationFramework
     $ProgressBar.Value = 98
     $ProgressBar.Dock = [System.Windows.Forms.DockStyle]::Top
 
-
-
     $Form.AcceptButton                  = $OKButton
     $Form.CancelButton                  = $CancelButton
     $Form.controls.AddRange(@($Sauvegarde,$Restauration,$OKButton,$CancelButton,$TextBox,$ProgressBar))
@@ -140,6 +138,9 @@ Function ChoixNOM {
         $DestinationPath.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
         $DestinationPath                     = $DestinationPath.SelectedPath
 
+        $Name                                = ChoixNOM -string $SourcePath -character "\" -range Right
+        $DestinationPath                     = $DestinationPath+$Name
+
         $folderSaved                         = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
         $list                                = foreach ($folderName in $folderSaved)
         {
@@ -151,8 +152,6 @@ Function ChoixNOM {
         $list | Export-Csv -Path "$env:TEMP\temp.csv" -Encoding UTF8 -Delimiter ';' -NoTypeInformation
         $CSV                                 = Import-Csv -Path "$env:TEMP\temp.csv" -Encoding 'UTF8' -Delimiter ';'
 
-        $Name                                = ChoixNOM -string $SourcePath -character "\" -range Right
-        $DestinationPath                     = $DestinationPath+$Name
         if (-not (Test-Path -Path $DestinationPath -PathType Container))
         {
             $alertMessage                    = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            

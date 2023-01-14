@@ -21,7 +21,6 @@ Add-Type -AssemblyName PresentationFramework
 
     $Form.TopMost                       = $true
 
-# RadioButton1
     $Sauvegarde                         = New-Object system.Windows.Forms.RadioButton
     $Sauvegarde.text                    = " Sauvegarde"
     $Sauvegarde.AutoSize                = $true
@@ -31,7 +30,6 @@ Add-Type -AssemblyName PresentationFramework
     $Sauvegarde.Font                    = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
     $Sauvegarde.ForeColor               = [System.Drawing.ColorTranslator]::FromHtml("#000091")
 
-# RadioButton2
     $Restauration                       = New-Object system.Windows.Forms.RadioButton
     $Restauration.text                  = " Restauration"
     $Restauration.AutoSize              = $true
@@ -41,7 +39,6 @@ Add-Type -AssemblyName PresentationFramework
     $Restauration.Font                  = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
     $Restauration.ForeColor             = [System.Drawing.ColorTranslator]::FromHtml("#E1000F")
 
-# OKButton
     $OKButton                           = New-Object system.Windows.Forms.Button
     $OKButton.text                      = "OK !"
     $OKButton.width                     = 130
@@ -50,21 +47,18 @@ Add-Type -AssemblyName PresentationFramework
     $OKButton.Font                      = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
     $OKButton.DialogResult              = [System.Windows.Forms.DialogResult]::OK
 
-# CancelButton
     $CancelButton                       = New-Object system.Windows.Forms.Button
     $CancelButton.text                  = "STOPTOU"
     $CancelButton.width                 = 130
     $CancelButton.height                = 30
     $CancelButton.location              = New-Object System.Drawing.Point(249,361)
     $CancelButton.Font                  = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-#    $CancelButton.Add_Click({((Stop-Process -Name powershell -Force));})
+    $CancelButton.Add_Click({((Stop-Process -Name powershell -Force));})
 
-# TextBox
     $TextBox                            = New-Object system.Windows.Forms.TextBox
     $TextBox.multiline                  = $true
     $TextBox.UTF8Encoding
     $TextBox.text = "-> Le bouton 'Sauvegarde' sauvegardera votre profil utilisateur à l'endroit que vous sélectionnerez. Les fichiers vidéos, de musique, et d'installation (*.mp3, *.mp4, *.avi, *.tmp, *.mkv, *.iso et *.msi) ne seront pas conservés !`r`n`r`n -> Le bouton 'Restauration' rétablira le profil utilisateur que vous avez sauvegardé depuis l'endroit que vous sélectionnerez."
-
     $TextBox.width                      = 350
     $TextBox.height                     = 155
     $TextBox.enabled                    = $false
@@ -79,10 +73,148 @@ Add-Type -AssemblyName PresentationFramework
     $ProgressBar.Value = 98
     $ProgressBar.Dock = [System.Windows.Forms.DockStyle]::Top
 
-
-
     $Form.AcceptButton                  = $OKButton
     $Form.CancelButton                  = $CancelButton
     $Form.controls.AddRange(@($Sauvegarde,$Restauration,$OKButton,$CancelButton,$TextBox,$ProgressBar))
     
     [void]$Form.ShowDialog()
+
+<# Fin Mise en page #>
+
+<# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #>
+
+<# Logic #>
+# Création de la fonction "ChoixNOM" (volée sur le web xD) pour la copie d'un dossier en ne récupérant QUE son nom
+Function ChoixNOM {
+    Param(
+        [Parameter(Mandatory=$true)][string]$string
+        , [Parameter(Mandatory=$true)][char]$character
+        , [Parameter(Mandatory=$false)][ValidateSet("Right","Left")][string]$range
+        , [Parameter(Mandatory=$false)][int]$afternumber
+        , [Parameter(Mandatory=$false)][int]$tonumber
+    )
+    Process
+    {
+        [string]$return                  = ""
+
+        if ($range -eq "Right")
+        {
+            $return                      = $string.Split("$character")[($string.Length - $string.Replace("$character","").Length)]
+        }
+        elseif ($range -eq "Left")
+        {
+            $return                      = $string.Split("$character")[0]
+        }
+        elseif ($tonumber -ne 0)
+        {
+            for ($i = $afternumber; $i -le ($afternumber + $tonumber); $i++)
+            {
+                $return                  += $string.Split("$character")[$i]
+            }
+        }
+        else
+        {
+            $return                      = $string.Split("$character")[$afternumber]
+        }
+
+        return $return
+    }
+}
+
+# Définition de diverses options et comportement de RoboCopy
+    $boom                                    = Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
+    $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
+    $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
+    $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /log+:$env:USERPROFILE\$log"
+
+    if ($Sauvegarde.Checked)
+    {
+        $SourcePath                          = $env:USERPROFILE
+        $RootFolderDestinationPath           = "D:\"
+        $DestinationPath                     = New-Object System.Windows.Forms.FolderBrowserDialog
+        $DestinationPath.Description         = " /!\ Choisir un dossier de sauvegarde /!\ "
+        $DestinationPath.ShowNewFolderButton = $true
+        $DestinationPath.SelectedPath        = $RootFolderDestinationPath
+        $DestinationPath.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+        $DestinationPath                     = $DestinationPath.SelectedPath
+
+        $Name                                = ChoixNOM -string $SourcePath -character "\" -range Right
+        $DestinationPath                     = $DestinationPath+$Name
+
+        $folderSaved                         = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
+        foreach ($folderName in $folderSaved)
+        {
+            [PSCustomObject]@{
+                Source                       = "$SourcePath\$folderName"
+                Destination                  = "$DestinationPath\$folderName"
+            }
+            if (-not (Test-Path -Path $DestinationPath -PathType Container))
+            {
+                $alertMessage                    = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+                if($alertMessage -eq $null)
+                {
+                    break
+                }
+                elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
+                {
+                    New-Item -Path $DestinationPath -ItemType "directory"
+                    Invoke-Expression $boom
+                    Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($Line.Source)", "$($Line.Destination)", $Options -NoNewWindow -Wait
+                }
+                    [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
+            }
+            }
+            elseif (Test-Path -Path $DestinationPath -PathType Container)
+            {
+                $alertMessage                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+                if($alertMessage -eq $null)
+                {
+                break
+                }
+                elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
+                {
+                    Invoke-Expression $boom
+                    Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($Line.Source)", "$($Line.Destination)", $Options -NoNewWindow -Wait
+                    [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
+            }
+        }
+    }
+    elseif ($Restauration.Checked)
+    {
+        # Définition de la Source
+        $RootFolderSourcePath                = "D:\"
+        $SourcePath                          = New-Object System.Windows.Forms.FolderBrowserDialog
+        $SourcePath.Description              = "/!\ Choisir la sauvegarde à restaurer /!\"
+        $SourcePath.ShowNewFolderButton      = $true
+        $SourcePath.SelectedPath             = $RootFolderSourcePath
+        $SourcePath.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+        $SourcePath                          = $SourcePath.SelectedPath
+    
+        # Définition de la destination
+        $DestinationPath                     = $env:USERPROFILE
+
+        # Lancement de la copie
+        $alertMessage                              = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+        if($alertMessage -eq $null)
+        {
+            break
+        }
+        elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
+        {
+            Invoke-Expression $boom
+            "Robocopy.exe $SourcePath $DestinationPath $Options"
+            [System.Windows.MessageBox]::Show("La restauration s'est correctement déroulée.`r` `r`DSIGE-DRU")
+        }
+    }
+    else
+    {
+        [System.Windows.MessageBox]::Show("Veuillez faire un choix s'il vous plaît.")
+        [void]$Form.ShowDialog()
+    }
+
+    $messageFin = ' FINI !' * 1000
+    Write-Host $messageFin
+
+    pause
+
+<# Fin Logic #>
