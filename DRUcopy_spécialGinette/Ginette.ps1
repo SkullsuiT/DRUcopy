@@ -159,12 +159,20 @@ Function ChoixNOM {
             {
                 New-Item -Path $DestinationPath -ItemType "directory"
                 Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
+                $copiedCount                 = 0
                 $errorCount                  = 0
                     $list | ForEach-Object -ThrottleLimit 2 -Parallel {
                         try {
                             Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($_.Source)", "$($_.Destination)", $Options -NoNewWindow -Wait
+                            Start-Sleep -Milliseconds 100
+                            $copiedCount++
+                            $ProgressBar.Value = ($copiedCount / $list.Count) * 100
                         } catch {
                             Write-Error "Une erreur est apparue en essayant de copier $($_.Source) to $($_.Destination)."
+                            $errorCount++
+                            Start-Sleep -Milliseconds 100
+                            $copiedCount++
+                            $ProgressBar.Value = ($copiedCount / $list.Count) * 100    
                             Continue
                         }
                     }
@@ -187,12 +195,20 @@ Function ChoixNOM {
             elseif ($alertMessage -eq "OK")
             {
                 Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
-                $errorCount                        = 0
+                $copiedCount                 = 0
+                $errorCount                  = 0
                 $list | ForEach-Object -ThrottleLimit 2 -Parallel {
                     try {
                         Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($_.Source)", "$($_.Destination)", $Options -NoNewWindow -Wait
+                        Start-Sleep -Milliseconds 100
+                        $copiedCount++
+                        $ProgressBar.Value = ($copiedCount / $list.Count) * 100
                     } catch {
                         Write-Error "Une erreur est apparue en essayant de copier $($_.Source) to $($_.Destination)."
+                        $errorCount++
+                        Start-Sleep -Milliseconds 100
+                        $copiedCount++
+                        $ProgressBar.Value = ($copiedCount / $list.Count) * 100
                         Continue
                     }
                 }

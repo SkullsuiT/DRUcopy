@@ -158,24 +158,89 @@ Function ChoixNOM {
                 {
                     New-Item -Path $DestinationPath -ItemType "directory"
                     Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
-                    Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($Line.Source)", "$($Line.Destination)", $Options -NoNewWindow -Wait
+                    $copiedCount                 = 0
+                    $errorCount                  = 0    
+                    $job = $list | ForEach-Object -ThrottleLimit 2 -Parallel {
+                        Start-Job -ScriptBlock {
+                            param($Source, $Destination, $Options)
+                            try {
+                                Start-Process -FilePath "Robocopy.exe" -ArgumentList "$Source", "$Destination", $Options -NoNewWindow -Wait
+                            } catch {
+                                Write-Error "Une erreur est apparue en essayant de copier $Source to $Destination."
+                            }
+                        } -ArgumentList $_.Source, $_.Destination, $Options -AsJob -PassThru
+                    }
+                    
+                    Wait-Job -Job $job
+                    $results = Receive-Job -Job $job
+                    $job | ForEach-Object {
+                        if ($_.State -eq 'Completed') {
+                            $copiedCount++
+                        } elseif ($_.State -eq 'Failed') {
+                            $errorCount++
+                        }
+                        $ProgressBar.Value = ($copiedCount / $list.Count) * 100
+
+                        foreach($result in $results) {
+                            if($result -is [System.Management.Automation.ErrorRecord]) {
+                                $errorCount++
+                            }
+                        }
+
+                        if($errorCount -gt 0) {
+                            [System.Windows.MessageBox]::Show("La Sauvegarde s'est terminée avec $errorCount erreurs.`r`Merci contacter votre Administrateur.`r` `r`DSIGE-DRU")
+                        }
+                        else {
+                            [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
+                        }
+                    }    
                 }
-                    [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
             }
-            }
-            elseif (Test-Path -Path $DestinationPath -PathType Container)
+        }
+        elseif (Test-Path -Path $DestinationPath -PathType Container)
+        {
+            $alertMessage                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
+            if($alertMessage -eq $null)
             {
-                $alertMessage                          = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
-                if($alertMessage -eq $null)
-                {
-                break
-                }
-                elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
-                {
-                    Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
-                    Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($Line.Source)", "$($Line.Destination)", $Options -NoNewWindow -Wait
-                    [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
+            break
             }
+            elseif ($alertMessage -eq [System.Windows.MessageBox]::OK)
+            {
+                $job = $list | ForEach-Object -ThrottleLimit 2 -Parallel {
+                    Start-Job -ScriptBlock {
+                        param($Source, $Destination, $Options)
+                        try {
+                            Start-Process -FilePath "Robocopy.exe" -ArgumentList "$Source", "$Destination", $Options -NoNewWindow -Wait
+                        } catch {
+                            Write-Error "Une erreur est apparue en essayant de copier $Source to $Destination."
+                        }
+                    } -ArgumentList $_.Source, $_.Destination, $Options -AsJob -PassThru
+                }
+                
+                Wait-Job -Job $job
+                $results = Receive-Job -Job $job
+                $job | ForEach-Object {
+                    if ($_.State -eq 'Completed') {
+                        $copiedCount++
+                    } elseif ($_.State -eq 'Failed') {
+                        $errorCount++
+                    }
+                    $ProgressBar.Value = ($copiedCount / $list.Count) * 100
+
+                    foreach($result in $results) {
+                        if($result -is [System.Management.Automation.ErrorRecord]) {
+                            $errorCount++
+                        }
+                    }
+
+                    if($errorCount -gt 0) {
+                        [System.Windows.MessageBox]::Show("La Sauvegarde s'est terminée avec $errorCount erreurs.`r`Merci contacter votre Administrateur.`r` `r`DSIGE-DRU")
+                    }
+                    else {
+                        [System.Windows.MessageBox]::Show("La Sauvegarde s'est correctement déroulée.`r` `r`DSIGE-DRU")
+                    }
+                }
+           }
         }
     }
     elseif ($Restauration.Checked)
