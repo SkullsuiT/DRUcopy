@@ -83,7 +83,8 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
     $OKButton.height                    = 30
     $OKButton.location                  = New-Object System.Drawing.Point(15,361)
     $OKButton.Font                      = New-Object System.Drawing.Font('Marianne',11,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $OKButton.Add_Click({if ($Sauvegarde.Checked)
+    $OKButton.Add_Click({
+        if ($Sauvegarde.Checked)
         {
             $SourcePath                          = $env:USERPROFILE
             $RootFolderDestinationPath           = "D:\"
@@ -101,8 +102,7 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
                 }
             } 
             while ($DestinationPath.StartsWith("C:\"))
-            $DestinationPath                     = $DestinationPath.SelectedPath
-<# 
+ 
             $Name                                = ChoixNOM -string $SourcePath -character "\" -range Right
             $DestinationPath                     = $DestinationPath+$Name
     
@@ -226,7 +226,7 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
         $messageFin                             = ' FINI !' * 1000
         Write-Host $messageFin
         
-        pause}) #>
+        pause})
 
     $CancelButton                       = New-Object system.Windows.Forms.Button
     $CancelButton.text                  = "STOPTOU"
