@@ -91,9 +91,18 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
             $DestinationPath.Description         = " /!\ Choisir un dossier de sauvegarde /!\ "
             $DestinationPath.ShowNewFolderButton = $true
             $DestinationPath.SelectedPath        = $RootFolderDestinationPath
-            $DestinationPath.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+            do
+            {
+                $DestinationPathDialog.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true}))
+                $DestinationPath = $DestinationPathDialog.SelectedPath
+                if ($DestinationPath.StartsWith("C:\")) 
+                {
+                    [System.Windows.MessageBox]::Show("Impossible de choisir 'C:\' ou tout autre chemin de destination commençant par 'C:\'. Sélectionner un autre chemin.")
+                }
+            } 
+            while ($DestinationPath.StartsWith("C:\"))
             $DestinationPath                     = $DestinationPath.SelectedPath
-    
+<# 
             $Name                                = ChoixNOM -string $SourcePath -character "\" -range Right
             $DestinationPath                     = $DestinationPath+$Name
     
@@ -111,6 +120,7 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
                 $alertMessage                    = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
                 if($alertMessage -eq $null)
                 {
+                    [System.Windows.MessageBox]::Show("En cas de doutes, ne pas hésiter à contacter votre Administrateur.`r` `r`DSIGE-DRU")
                     break
                 }
                 elseif ($alertMessage -eq "OK")
@@ -147,6 +157,7 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
                 $alertMessage                       = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
                 if($alertMessage -eq $null)
                 {
+                [System.Windows.MessageBox]::Show("En cas de doutes, ne pas hésiter à contacter votre Administrateur.`r` `r`DSIGE-DRU")
                 break
                 }
                 elseif ($alertMessage -eq "OK")
@@ -196,6 +207,7 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
             $alertMessage                        = [System.Windows.MessageBox]::Show("Veuillez ne pas utiliser Firefox ainsi que Thunderbird durant la durée de la copie (15-20 min).`r` `r`Merci d'avance. `r`DSIGE-DRU")            
             if($alertMessage -eq $null)
             {
+                [System.Windows.MessageBox]::Show("En cas de doutes, ne pas hésiter à contacter votre Administrateur.`r` `r`DSIGE-DRU")
                 break
             }
             elseif ($alertMessage -eq "OK")
@@ -214,7 +226,7 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
         $messageFin                             = ' FINI !' * 1000
         Write-Host $messageFin
         
-        pause})
+        pause}) #>
 
     $CancelButton                       = New-Object system.Windows.Forms.Button
     $CancelButton.text                  = "STOPTOU"
