@@ -134,14 +134,14 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
                             Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($_.Source)", "$($_.Destination)", $Options -NoNewWindow -Wait
                             Start-Sleep -Milliseconds 100
                             $copiedCount++
-                            $ProgressBar.Value   = ($copiedCount / $list.Count) * 100
-                        } catch {
+<#                             $ProgressBar.Value   = ($copiedCount / $list.Count) * 100
+ #>                        } catch {
                             Write-Error "Une erreur est apparue en essayant de copier $($_.Source) to $($_.Destination)."
                             $errorCount++
                             Start-Sleep -Milliseconds 100
-                            $copiedCount++
+<#                             $copiedCount++
                             $ProgressBar.Value   = ($copiedCount / $list.Count) * 100    
-                            Continue
+ #>                            Continue
                         }
                     }
                     if($errorCount -gt 0){
@@ -170,14 +170,14 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
                             Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($_.Source)", "$($_.Destination)", $Options -NoNewWindow -Wait
                             Start-Sleep -Milliseconds 100
                             $copiedCount++
-                            $ProgressBar.Value      = ($copiedCount / $list.Count) * 100
-                        } catch {
+<#                             $ProgressBar.Value      = ($copiedCount / $list.Count) * 100
+ #>                        } catch {
                             Write-Error "Une erreur est apparue en essayant de copier $($_.Source) to $($_.Destination)."
                             $errorCount++
                             Start-Sleep -Milliseconds 100
-                            $copiedCount++
+<#                             $copiedCount++
                             $ProgressBar.Value      = ($copiedCount / $list.Count) * 100
-                            Continue
+ #>                            Continue
                         }
                     }
                     if($errorCount -gt 0){
@@ -246,13 +246,13 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
     $TextBox.location                   = New-Object System.Drawing.Point(20,180)
     $TextBox.Font                       = New-Object System.Drawing.Font('Arial',10)
 
-    $ProgressBar                        = New-Object System.Windows.Forms.ProgressBar
+<#     $ProgressBar                        = New-Object System.Windows.Forms.ProgressBar
     $ProgressBar.Maximum                = 100
     $ProgressBar.Minimum                = 0
     $ProgressBar.Step                   = 1
     $ProgressBar.Dock                   = [System.Windows.Forms.DockStyle]::Top
 
-    $Form.AcceptButton                  = $OKButton
+ #>    $Form.AcceptButton                  = $OKButton
     $Form.CancelButton                  = $CancelButton
     $Form.controls.AddRange(@($Sauvegarde,$Restauration,$OKButton,$CancelButton,$TextBox,$ProgressBar))
     
