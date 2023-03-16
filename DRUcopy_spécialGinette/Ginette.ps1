@@ -106,7 +106,6 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
             $Name                                = ChoixNOM -string $SourcePath -character "\" -range Right
             $DestinationPath                     = $DestinationPath+$Name
     
-            $folderSaved                         = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
             $list                                = foreach ($folderName in $folderSaved)
             {
                 [PSCustomObject]@{
