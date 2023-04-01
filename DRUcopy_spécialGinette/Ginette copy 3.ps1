@@ -19,7 +19,7 @@ function Copy-WithProgress {
         , [int] $ReportGap = 200
     )
     # Define regular expression that will gather number of bytes copied
-    $RegexBytes = '(?<=\s+)\d+(?=\s+)';
+    $RegexBytes = '(?<=\s+New File\s+)\d+(?=\s+)';
 
     #region Robocopy params
     # MIR = Mirror mode
@@ -29,7 +29,8 @@ function Copy-WithProgress {
     # NJH = Do not display robocopy job header (JH)
     # NJS = Do not display robocopy job summary (JS)
     # TEE = Display log in stdout AND in target log file
-    $CommonRobocopyParams = '/MIR /NP /NDL /NC /BYTES /NJH /NJS';
+    $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
+    $CommonRobocopyParams = '/MIR /NP /NDL /NC /BYTES /NJH /NJS $XF';
     #endregion Robocopy params
 
     #region Robocopy Staging
@@ -117,9 +118,12 @@ Function FunctionMOT {
     }
 }
 
-$XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
-$log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
-$Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /NDL /NJH /NJS /log+:$env:USERPROFILE\$log"
+# $XF                                      = '/Xf "*.mp4" "*.mp3" "*.avi" "*.tmp" "*.mkv" "*.iso" "*.msi"'
+# $log                                     = "RoboCopy_$env:COMPUTERNAME"+"_"+"$env:UserName.log"
+# $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J /r:5 /w:2 /Xo /NDL /NJH /NJS /log+:$env:USERPROFILE\$log"
+
+$SourcePath                          = $env:USERPROFILE
+$DestinationPath                     = "C:\Users\jda-silva3\AppData\Local\Temp"
 
 $folderNames                         = "Desktop", "Contacts", "Documents", "Favorites", "Pictures", "Videos", "Downloads", "AppData\Roaming\Thunderbird", "AppData\Roaming\Mozilla", "AppData\Roaming\Google"
 $list                                = foreach ($folderName in $folderNames) {
@@ -128,12 +132,12 @@ $list                                = foreach ($folderName in $folderNames) {
         Destination                  = "$DestinationPath\$folderName"
     }
 }
-$list | Export-Csv -Path "$env:TEMP\temp.csv" -Encoding UTF8 -Delimiter ';' -NoTypeInformation
+$list | Export-Csv -Path "$env:TEMP\temp.csv" -Encoding 'UTF8' -Delimiter ';' -NoTypeInformation
 
 $CSV                                 = Import-Csv -Path "$env:TEMP\temp.csv" -Encoding 'UTF8' -Delimiter ';'
 $SourcePath                          = $env:USERPROFILE
 $Name                                = FunctionMOT -string $SourcePath -character "\" -range Right
-$DestinationPath                     = "D:\"
+$DestinationPath                     = "C:\Users\jda-silva3\AppData\Local\Temp\"
 $DestinationPath                     = $DestinationPath+$Name
 if (-not (Test-Path -Path $DestinationPath -PathType Container)) {
     New-Item -Path $DestinationPath -ItemType "directory"
