@@ -130,11 +130,8 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
                     $errorCount                  = 0
                     $list | ForEach-Object -ThrottleLimit 2 -Parallel {
                         try {
-                            Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($_.Source)", "$($_.Destination)", $Options -NoNewWindow -Wait
-                            Start-Sleep -Milliseconds 100
-                            $copiedCount++
-<#                             $ProgressBar.Value   = ($copiedCount / $list.Count) * 100
- #>                        } catch {
+                            Copy-WithProgress -Source $($Line.Source) -Destination $($Line.Destination) -Verbose
+                        } catch {
                             Write-Error "Une erreur est apparue en essayant de copier $($_.Source) to $($_.Destination)."
                             $errorCount++
                             Start-Sleep -Milliseconds 100
@@ -166,17 +163,12 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
                     $errorCount                     = 0
                     $list | ForEach-Object -ThrottleLimit 2 -Parallel {
                         try {
-                            Start-Process -FilePath "Robocopy.exe" -ArgumentList "$($_.Source)", "$($_.Destination)", $Options -NoNewWindow -Wait
-                            Start-Sleep -Milliseconds 100
-                            $copiedCount++
-<#                             $ProgressBar.Value      = ($copiedCount / $list.Count) * 100
- #>                        } catch {
+                            Copy-WithProgress -Source $($Line.Source) -Destination $($Line.Destination) -Verbose
+                        } catch {
                             Write-Error "Une erreur est apparue en essayant de copier $($_.Source) to $($_.Destination)."
                             $errorCount++
                             Start-Sleep -Milliseconds 100
-<#                             $copiedCount++
-                            $ProgressBar.Value      = ($copiedCount / $list.Count) * 100
- #>                            Continue
+                            Continue
                         }
                     }
                     if($errorCount -gt 0){
@@ -212,7 +204,7 @@ $Options                                 = "*.* /s /tee /Eta /timfix $XF /MIR /J
             elseif ($alertMessage -eq "OK")
             {
                 Stop-Process -Name "firefox","thunderbird" -Force -ErrorAction SilentlyContinue
-                "Robocopy.exe $SourcePath $DestinationPath $Options"
+                Copy-WithProgress -Source $($Line.Source) -Destination $($Line.Destination) -Verbose
                 [System.Windows.MessageBox]::Show("La restauration s'est correctement déroulée.`r` `r`DSIGE-DRU")
             }
         }

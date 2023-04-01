@@ -1,0 +1,11 @@
+Source,Destination
+$SourcePath\Desktop,$DestinationPath\$Name\Desktop
+$SourcePath\Contacts,$DestinationPath\$Name\Contacts
+$SourcePath\Documents,$DestinationPath\$Name\Documents
+$SourcePath\Favorites,$DestinationPath\$Name\Favorites
+$SourcePath\Pictures,$DestinationPath\$Name\Pictures
+$SourcePath\Videos,$DestinationPath\$Name\Videos
+$SourcePath\Downloads,$DestinationPath\$Name\Downloads
+$SourcePath\AppData\Roaming\Thunderbird,$DestinationPath\$Name\AppData\Roaming\Thunderbird
+$SourcePath\AppData\Roaming\Mozilla,$DestinationPath\$Name\AppData\Roaming\Mozilla
+$SourcePath\AppData\Local\Google,$DestinationPath\$Name\AppData\Local\Google
